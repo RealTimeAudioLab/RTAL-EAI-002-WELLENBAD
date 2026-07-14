@@ -152,21 +152,6 @@ Communication:
 
 ---
 
-# Gallery
-
-```
-images/
- hero.jpg
- front.jpg
- rear.jpg
- display.jpg
- inside.jpg
- studio.jpg
- blockdiagram.png
-```
-
----
-
 # Open Engineering
 
 The repository will gradually include:
