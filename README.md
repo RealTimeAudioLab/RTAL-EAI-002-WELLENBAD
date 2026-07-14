@@ -181,6 +181,6 @@ The goal is to share not only the finished synthesizer, but also the engineering
 
 # License
 
-MIT License
+GNU General Public License Version 3
 
 **RealTimeAudioLab**
