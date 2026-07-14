@@ -5,7 +5,11 @@
 
 > **An open-source wavetable synthesizer exploring how far modern embedded audio can be pushed using only a handful of affordable components and carefully engineered software.**
 
-![Hero](images/hero.jpg)
+</p>
+<p align="center">
+<img src="images/Wellenbad_1.jpg" width="900">
+
+Figure 1 - Wellenbad Syntheszier (what it might look like in the future)
 
 ---
 
@@ -92,11 +96,11 @@ Every feature is evaluated by:
 | Storage | MicroSD |
 | MIDI | DIN MIDI |
 
-![Front](images/front.jpg)
+</p>
+<p align="center">
+<img src="images/Wellenbad_2.jpg" width="900">
 
-![Display](images/display.jpg)
-
-![Inside](images/inside.jpg)
+Figure 2 - Wellenbad Syntheszier Details (what it might look like in the future)
 
 ---
 
