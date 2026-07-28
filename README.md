@@ -90,7 +90,7 @@ Every design decision is evaluated according to:
 
 The ESP32-S3 combines floating-point processing, PSRAM support, USB, I²S and excellent cost efficiency, making it an ideal platform for modern embedded audio.
 
-## Why no DSp or FPGA?
+## Why no DSP or FPGA?
 
 WELLENBAD intentionally demonstrates what can be achieved through efficient software engineering before adding hardware complexity.
 
