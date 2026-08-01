@@ -20,7 +20,7 @@
 | User Interface | 🟢 Mature |
 | Hardware | 🟡 Prototype |
 | PCB | 🔵 Planned |
-| Dual ESP32 FX | 🔵 Future |
+| Dual ESP32 FX | 🟡 Prototype |
 
 ---
 
