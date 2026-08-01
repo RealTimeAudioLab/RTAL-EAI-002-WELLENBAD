@@ -154,6 +154,8 @@ SD access or user-interface activity.
 This confirmed that the remaining timing limits are inherent to the
 available CPU budget rather than software inefficiencies.
 
+Version 1.1 removes the audible quality reduction previously used for high polyphony. Thanks to the A005 optimization series, all six voices are now rendered using the full dual-oscillator engine with chorus enabled, providing consistent sound quality across the entire polyphony range.
+
 ------------------------------------------------------------------------
 
 # Conclusion
