@@ -124,6 +124,11 @@ void drawMidiChannelBootScreen(uint8_t ch);
 // ================================================================
 /// Polyphony/CPU optimization switches
 // ================================================================
+// Full quality audio engine for all voices.
+// Fast Poly mode has been retired since v1.1 because
+// the A005 optimization series provides sufficient
+// CPU headroom for six high-quality voices.
+
 #define RTAL_POLY_FAST_THRESHOLD 5
 #define RTAL_ENABLE_FAST_POLY 0
 #define RTAL_DYNAMIC_HEADROOM 1
