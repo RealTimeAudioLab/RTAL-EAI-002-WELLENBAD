@@ -8,13 +8,29 @@
 
 ![Hero](images/Wellenbad_1.jpg)
 
+## Show Sequencer Demonstration
+
+<p align="center">
+  <img src="images/Wellenbad_Sequenzer.gif"
+       alt="WELLENBAD Show Sequencer in operation"
+       width="800">
+</p>
+
+## Show Wave Monitor Demonstration
+
+<p align="center">
+  <img src="images/Wellenbad_Wave_Monitor.gif"
+       alt="WELLENBAD Show Wave Monitor in operation"
+       width="800">
+</p>
+
 ---
 
 ## Project Status
 
 | Area | Status |
 |------|--------|
-| Firmware | 🟢 Stable Foundation |
+| Firmware | 🟢 Version 1.2 |
 | Audio Engine | 🟢 Mature |
 | MIDI | 🟢 Complete |
 | User Interface | 🟢 Mature |
