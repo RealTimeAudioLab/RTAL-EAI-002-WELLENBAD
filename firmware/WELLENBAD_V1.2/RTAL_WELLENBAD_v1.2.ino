@@ -137,9 +137,9 @@ void drawMidiChannelBootScreen(uint8_t ch);
 /// Polyphony/CPU optimization switches
 // ================================================================
 #define RTAL_POLY_FAST_THRESHOLD 5
-#define RTAL_ENABLE_FAST_POLY 1
+#define RTAL_ENABLE_FAST_POLY 0
 #define RTAL_DYNAMIC_HEADROOM 1
-#define RTAL_DISABLE_CHORUS_HIGH_POLY 1
+#define RTAL_DISABLE_CHORUS_HIGH_POLY 0
 
 #ifndef EXT_RAM_ATTR
 #define EXT_RAM_ATTR
