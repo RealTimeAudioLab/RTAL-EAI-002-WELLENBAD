@@ -213,12 +213,6 @@ The v1.3 preset system includes:
 
 The firmware keeps Single Performance and Multi operation clearly separated: loading a normal Factory/User preset from the Performance browser returns WELLENBAD to Single mode, while loading a preset from within the Multi Part editor changes only the selected Part.
 
-An optional **U100–U119 ARP/SEQ showcase bank** is included with the release package under:
-
-```text
-Extras/Presets/
-```
-
 ---
 
 ## MIDI
@@ -475,7 +469,7 @@ The final v1.3 release candidate with internal chorus enabled passed the functio
 ## Gallery
 
 <p align="center">
-<img src="images/Wellenbad_Prototype_3.jpeg" width="900">
+<img src="Wellenbad_Prototype_3.jpeg" width="900">
 
 ---
 
