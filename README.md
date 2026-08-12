@@ -127,9 +127,7 @@ Implemented today:
 - Arpeggiator
 - Floating-point DSP
 
-![Prototype 1](images/Wellenbad_Prototype_1.jpeg)
-
-![Prototype 2](images/Wellenbad_Prototype_2.jpeg)
+![Prototype 1](images/Wellenbad_Prototype_3.jpeg)
 
 ---
 
