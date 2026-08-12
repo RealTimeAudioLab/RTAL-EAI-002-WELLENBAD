@@ -474,14 +474,8 @@ The final v1.3 release candidate with internal chorus enabled passed the functio
 
 ## Gallery
 
-The following placeholders can be replaced with photographs of your own WELLENBAD hardware:
-
-```markdown
-![WELLENBAD front view](images/wellenbad-front.jpg)
-![WELLENBAD prototype](images/wellenbad-prototype.jpg)
-![WELLENBAD display](images/wellenbad-display.jpg)
-![WELLENBAD internal hardware](images/wellenbad-inside.jpg)
-```
+<p align="center">
+<img src="images/Wellenbad_Prototype_3.jpeg" width="900">
 
 ---
 
