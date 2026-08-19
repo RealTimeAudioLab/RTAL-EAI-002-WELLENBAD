@@ -16,6 +16,14 @@
        width="800">
 </p>
 
+## Show Wave Monitor Sequencer
+
+<p align="center">
+  <img src="images/RTAL_WELLENBAD_SEQUENCER.gif"
+       alt="WELLENBAD Show Wave Monitor in operation"
+       width="800">
+</p>
+
 ---
 
 ## Project Status
