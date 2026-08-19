@@ -11,7 +11,7 @@
 ## Show Wave Monitor Demonstration
 
 <p align="center">
-  <img src="images/RTA_WELLENBAD_EDITOR.gif"
+  <img src="images/RTAL_WELLENBAD_EDITOR.gif"
        alt="WELLENBAD Show Wave Monitor in operation"
        width="800">
 </p>
