@@ -8,18 +8,10 @@
 
 ![Hero](images/Wellenbad_1.jpg)
 
-## Show Sequencer Demonstration
-
-<p align="center">
-  <img src="images/Wellenbad_Sequenzer.gif"
-       alt="WELLENBAD Show Sequencer in operation"
-       width="800">
-</p>
-
 ## Show Wave Monitor Demonstration
 
 <p align="center">
-  <img src="images/Wellenbad_Wave_Monitor.gif"
+  <img src="images/RTA_WELLENBAD_EDITOR.gif"
        alt="WELLENBAD Show Wave Monitor in operation"
        width="800">
 </p>
