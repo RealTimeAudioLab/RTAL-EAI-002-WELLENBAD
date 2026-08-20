@@ -16,7 +16,7 @@
        width="800">
 </p>
 
-## Wave Monitor Sequencer WELLENBAD
+## Wave Sequencer WELLENBAD
 
 <p align="center">
   <img src="images/RTAL_WELLENBAD_SEQUENCER.gif"
@@ -24,7 +24,7 @@
        width="800">
 </p>
 
-## Wave Monitor Sequencer PC Editor
+## Wave Sequencer PC Editor
 
 <p align="center">
   <img src="images/RTAL_WELLENBAD_SEQUENCER_2.gif"
