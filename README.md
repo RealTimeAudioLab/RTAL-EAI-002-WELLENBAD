@@ -38,7 +38,7 @@
 
 | Area | Status |
 |------|--------|
-| Firmware | 🟢 Version 1.2 |
+| Firmware | 🟢 Version 1.3 |
 | Audio Engine | 🟢 Mature |
 | MIDI | 🟢 Complete |
 | User Interface | 🟢 Mature |
