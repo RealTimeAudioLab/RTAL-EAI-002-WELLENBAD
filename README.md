@@ -16,10 +16,18 @@
        width="800">
 </p>
 
-## Show Wave Monitor Sequencer
+## Show Wave Monitor Sequencer I
 
 <p align="center">
   <img src="images/RTAL_WELLENBAD_SEQUENCER.gif"
+       alt="WELLENBAD Show Wave Monitor in operation"
+       width="800">
+</p>
+
+## Show Wave Monitor Sequencer II
+
+<p align="center">
+  <img src="images/RTAL_WELLENBAD_SEQUENCER_2.gif"
        alt="WELLENBAD Show Wave Monitor in operation"
        width="800">
 </p>
