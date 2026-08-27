@@ -42,9 +42,9 @@
 | Audio Engine | 🟢 Mature |
 | MIDI | 🟢 Complete |
 | User Interface | 🟢 Mature |
-| Hardware | 🟡 Prototype |
+| Hardware | 🟢 Mature |
 | PCB | 🔵 Planned |
-| Dual ESP32 FX | 🟡 Prototype |
+| Dual ESP32 FX | 🟢 Mature |
 
 ---
 
@@ -224,7 +224,7 @@ PCM5102A DAC
 | MIDI | ✅ |
 | Sequencer | ✅ |
 | User Presets | ✅ |
-| Dual ESP32 | 🚧 |
+| Dual ESP32 | ✅ |
 
 ---
 
