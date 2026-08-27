@@ -45,6 +45,7 @@
 | Hardware | 🟢 Mature |
 | PCB | 🔵 Planned |
 | Dual ESP32 FX | 🟢 Mature |
+| PC Editor | 🟢 Mature |
 
 ---
 
