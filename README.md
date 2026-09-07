@@ -6,7 +6,12 @@
 
 > **An open-source wavetable synthesizer exploring how far modern embedded audio can be pushed using only a handful of affordable components and carefully engineered software.**
 
-![Hero](images/Wellenbad_1.jpg)
+---
+
+## WELLENBAD Live Sound Demo 
+https://github.com/user-attachments/assets/834537af-4713-4496-9c79-22cb06b83279
+
+---
 
 ## Wave Monitor Demonstration
 
