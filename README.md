@@ -680,7 +680,7 @@ No network connection is required for the normal USB editor workflow.
 ![WELLENBAD Wave Monitor](docs/images/editor_wave_monitor.jpg)
 
 ### Graphical Wave Sequencer
-![WELLENBAD Graphical Wave Sequencer](docs/images/editor_wave_sequencer.jpg)
+![WELLENBAD Graphical Wave Sequencer](images/RTAL_WELLENBAD_SEQUENCER_2.gif)
 
 ### Preset / Multi Management
 ![WELLENBAD Preset Multi Management](docs/images/editor_preset_multi.jpg)
