@@ -1,0 +1,1059 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RTAL WELLENBAD EDITOR V1.5</title>
+<style>
+body{margin:0;background:#111;color:#eee;font-family:Segoe UI,Arial,sans-serif}
+.wrap{max-width:900px;margin:24px auto;padding:0 18px}
+.panel{background:#1b1b1b;border:1px solid #333;border-radius:10px;padding:16px;margin-bottom:16px}
+h1{font-size:24px;font-weight:600}
+#oled{width:768px;max-width:100%;height:auto;image-rendering:pixelated;background:#000;border:1px solid #444;display:block;margin:auto}
+select{width:100%;background:#202020;color:#eee;border:1px solid #555;border-radius:6px;padding:9px;font-size:14px}.toggleOn{background:#4a4a4a;border-color:#888}.tabActive{background:#5a5a5a;border-color:#aaa;font-weight:600;box-shadow:inset 0 0 0 1px #777}.sectionTitle{font-size:12px;color:#bbb;margin:16px 0 8px;text-transform:uppercase;letter-spacing:.08em}
+button{background:#222;color:#eee;border:1px solid #555;border-radius:7px;padding:11px 16px;font-size:14px;cursor:pointer}
+button:active{background:#555}
+.small{font-size:12px;color:#999;margin-top:10px}.health{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}.pill{font-size:11px;padding:5px 8px;border:1px solid #555;border-radius:999px;color:#aaa}.pill.ok{color:#eee;border-color:#888;background:#333}.pill.warn{color:#ddd;border-color:#777;background:#222}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}
+.card{background:#151515;border:1px solid #303030;border-radius:7px;padding:10px}
+.k{font-size:11px;color:#999;text-transform:uppercase}
+.v{font-size:20px;margin-top:4px}
+.keys{display:grid;grid-template-columns:repeat(8,1fr);gap:8px;margin-top:14px}
+.enc{display:flex;justify-content:center;gap:10px;margin-top:12px}
+@media(max-width:760px){.keys{grid-template-columns:repeat(4,1fr)}}
+
+.seqWrap{margin-top:12px}.seqToolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0}.seqGraph{display:grid;grid-template-columns:repeat(16,minmax(28px,1fr));gap:5px;align-items:end;overflow-x:auto;padding:12px 2px 4px}.seqStep{min-width:28px;text-align:center;padding:5px 3px;border:1px solid #303030;border-radius:7px;background:#151515;transition:border-color .08s,background .08s,opacity .08s}.seqStep.inactive{opacity:.28}.seqStep.playing{border-color:#ddd;background:#303030;box-shadow:inset 0 0 0 1px #777}.seqBarTrack{height:160px;position:relative;background:#0d0d0d;border:1px solid #333;border-radius:5px;cursor:ns-resize;touch-action:none;overflow:hidden}.seqBarFill{position:absolute;left:4px;right:4px;bottom:0;background:#777;border-radius:3px 3px 0 0;pointer-events:none}.seqStep.playing .seqBarFill{background:#bbb}.seqValue{font-size:12px;margin-top:5px;font-variant-numeric:tabular-nums}.seqNum{font-size:10px;color:#888;margin-top:3px}.seqLegend{font-size:11px;color:#888;margin-top:8px}.seqTableDisabled{opacity:.45}
+@media(max-width:760px){.seqGraph{grid-template-columns:repeat(16,34px)}}
+
+.presetToolbar{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.presetList{max-height:420px;overflow:auto;border:1px solid #333;border-radius:8px}.presetRow{display:grid;grid-template-columns:70px 1fr 80px;gap:8px;padding:8px 10px;border-bottom:1px solid #292929;align-items:center;cursor:pointer}.presetRow:last-child{border-bottom:0}.presetRow.sel{background:#303030}.presetRow.current{box-shadow:inset 3px 0 0 #aaa}.presetNameInput{width:100%;box-sizing:border-box;background:#202020;color:#eee;border:1px solid #555;border-radius:6px;padding:9px}.coverage{display:flex;flex-wrap:wrap;gap:7px;margin:9px 0 4px}.cov{border:1px solid #4b5563;border-radius:7px;padding:5px 9px;font-size:12px;font-weight:700;background:#111827}.cov.ok{border-color:#34d399}.cov.warn{border-color:#fbbf24}.cov.bad{border-color:#fb7185}.coverageDetail{font-size:11px;opacity:.78;margin:4px 0 10px;white-space:normal}
+
+.multiToolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0}.multiParts{display:grid;grid-template-columns:repeat(4,minmax(190px,1fr));gap:10px}.multiPart{background:#151515;border:1px solid #303030;border-radius:9px;padding:11px}.multiPart.selected{border-color:#aaa;box-shadow:inset 0 0 0 1px #666}.multiPartHeader{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:8px}.multiStatus{font-size:11px;color:#aaa}.multiCtrl{margin:8px 0}.multiCtrl label{display:block;font-size:11px;color:#999;text-transform:uppercase;margin-bottom:3px}.multiCtrl input,.multiCtrl select{width:100%;box-sizing:border-box}.multiButtons{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:8px}.multiButtons button{padding:8px 4px}.multiWarning{padding:9px;border:1px solid #6b5d32;border-radius:7px;background:#211f16;color:#d8cfaa;margin:8px 0}.multiKeyboardPlaceholder{margin-top:12px;padding:10px;border:1px dashed #444;border-radius:7px;color:#888;font-size:11px}@media(max-width:900px){.multiParts{grid-template-columns:repeat(2,minmax(190px,1fr))}}@media(max-width:520px){.multiParts{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>RTAL WELLENBAD EDITOR V1.5</h1>
+
+<div class="panel">
+<button id="connect">Connect WELLENBAD CDC</button>
+<span id="status"></span>
+<div class="health"><span id="hUsb" class="pill">USB OFF</span><span id="hOled" class="pill">OLED WAIT</span><span id="hParam" class="pill">PARAM WAIT</span><span id="hTele" class="pill">TELE WAIT</span><span id="hFx" class="pill">FX WAIT</span><span id="hSeq" class="pill">SEQ WAIT</span><span id="hPreset" class="pill">PRESET WAIT</span><span id="hMulti" class="pill">MULTI WAIT</span><span id="hSync" class="pill">NOT SYNCED</span></div>
+<div class="small" id="healthDetail">No link health yet</div>
+<div class="sectionTitle">PERFORMANCE MODE</div><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button id="modeSingle">SINGLE</button><button id="modeMulti">MULTI</button><span id="modeDetail" class="small" style="margin-top:0">Waiting for state…</span></div>
+</div>
+
+<div class="panel">
+<canvas id="oled" width="128" height="64"></canvas>
+<div class="small" id="stats">No frames yet</div>
+
+<div class="keys" id="keys"></div>
+
+<div class="enc">
+<button onclick="cmd('E',-1)">◀</button>
+<button id="enc">ENCODER</button>
+<button onclick="cmd('E',1)">▶</button>
+</div>
+
+<div class="small">Rechtsklick auf SOUND / EDIT / MOD / FX / STORE / LOAD / PLAY / BACK oder ENCODER = Long Press.</div>
+</div>
+
+<div class="panel">
+<div class="k" style="margin-bottom:12px">WELLENBAD PARAMETER EDITOR</div>
+<div id="tabs"></div>
+<div id="editor"></div>
+<div class="small">WB0067 / A015: WB0058F Performance/Keymap/Multi + 4-Pole Biquad. SINGLE/MULTI auf PLAY Long; BACK Long = HOME; 128 Multis; modeabhängiger MIDI Program Change; 2x2-Pole FAST32/FPU-Biquad-Filter + SINGLE Snapshot OPT3.</div>
+<div class="coverage"><span id="covSynth" class="cov">SYNTH --/57</span><span id="covFx" class="cov">FX --/52</span><span id="covSeq" class="cov">SEQ --/16</span><span id="covSystem" class="cov">SYSTEM --/5</span><span id="covSchema" class="cov">SCHEMA CHECK</span></div><div id="coverageDetail" class="coverageDetail">Waiting for parameter state…</div>
+</div>
+
+<div class="panel">
+<div class="grid" id="grid"></div>
+</div>
+</div>
+
+<script>
+let port,reader,writer,buf=new Uint8Array(0),connected=false,frames=0;
+let connectionToken=0;
+let lastValidPacketMs=0,lastOledMs=0,lastParamMs=0,lastTeleMs=0,lastHealthMs=0,lastFxMs=0,lastSeqMs=0,lastPresetMs=0,lastMultiMs=0;
+let fxLinkConnected=false,fxLastSeq=0;
+let seqValues=new Array(16).fill(0),seqTableMode=0,seqCurrentStep=0,seqRuntimePart=0,seqLastSeq=0;
+let seqDragging=-1;
+let presetEntries=Array.from({length:128},(_,i)=>({slot:i,valid:i<30,name:i<30?('FACTORY '+String(i).padStart(3,'0')):'',factory:i<30}));
+let presetCurrentSlot=0,presetCurrentName='',presetSelectedSlot=0,presetSdOk=false,presetInitialized=false,lastPresetRenderMs=0;
+let presetScrollTop=0,presetScrollActiveUntil=0,presetInitialCenterPending=true,presetDeferredRender=false;
+let multiActive=false,multiSdOk=false,multiCurrentSlot=0,multiSelectedPart=0,multiName='',multiSolo=-1,multiSoloMuteSnapshot=null;
+let multiBrowseSlot=0,multiBrowseName='',multiBrowseValid=false,multiBrowsePending=-1;
+let multiParts=Array.from({length:4},(_,i)=>({preset:i,midi:i+1,volume:127,transpose:0,reserve:0,gate:80,low:0,high:127,root:60,pan:0,enabled:true,mute:false,voices:0,name:''}));
+let sysMidiChannel=1,sysCcMode=0,sysCcBank=0,teleClockSource=0,teleBpmX100=12000,teleClockTicks=0,teleClockJitter=0;
+let linkSession=0,lastParamSeq=0;
+let writeChain=Promise.resolve();
+let recoveryRunning=false,lastSoftResyncMs=0,rtSafe=false,audioQuietInferred=false,smartSafeActive=false,lastSmartMs=0;
+const c=document.getElementById('oled'),x=c.getContext('2d');x.imageSmoothingEnabled=false;
+const td=new TextEncoder();
+modeSingle.onclick=()=>cmdPerformanceMode(0); modeMulti.onclick=()=>cmdPerformanceMode(1);
+
+const BUTTON_NAMES=['SOUND','EDIT','MOD','FX','STORE','LOAD','PLAY','BACK'];
+for(let i=1;i<=8;i++){
+  let b=document.createElement('button');
+  b.textContent=BUTTON_NAMES[i-1];
+  b.title='T'+i+' – '+BUTTON_NAMES[i-1];
+  b.onclick=()=>cmd('B',i);
+  b.oncontextmenu=e=>{e.preventDefault();cmd('L',i)};
+  keys.appendChild(b);
+}
+
+enc.onclick=()=>cmd('P',1);
+enc.oncontextmenu=e=>{e.preventDefault();cmd('Q',1)};
+
+
+
+function serialWrite(text){
+  if(!writer || !connected) return Promise.resolve();
+  writeChain=writeChain.then(()=>writer.write(td.encode(text))).catch(e=>{
+    status.textContent=' TX error';
+  });
+  return writeChain;
+}
+
+function cmd(k,v){
+  return serialWrite(`!RTAL,${k},${v}
+`);
+}
+
+const sliderTimer=Object.create(null);
+function paramSet(paramId,value){
+  value=Math.max(0,Math.min(127,Number(value)|0));
+  clearTimeout(sliderTimer[paramId]);
+  sliderTimer[paramId]=setTimeout(()=>cmdParam(paramId,value),20);
+}
+
+function cmdParam(paramId,value){
+  return serialWrite(`!RTAL,S,${paramId},${value}\n`);
+}
+const fxTimer=Object.create(null);
+function cmdFxRaw(paramId,raw){ return serialWrite(`!RTAL,F,${paramId},${raw}\n`); }
+function fxSet(paramId,raw){
+  clearTimeout(fxTimer[paramId]);
+  fxTimer[paramId]=setTimeout(()=>cmdFxRaw(paramId,raw),20);
+}
+function fxExclusiveModSet(paramId,raw){
+  const map={80:1,96:2,112:3};
+  const effect=map[paramId];
+  if(!effect){fxSet(paramId,raw);return;}
+  if(raw){
+    fxValues[64]=1;
+    fxValues[80]=(paramId===80)?1:0;
+    fxValues[96]=(paramId===96)?1:0;
+    fxValues[112]=(paramId===112)?1:0;
+    fxValues[74]=effect;
+    cmdFxRaw(80,fxValues[80]); cmdFxRaw(96,fxValues[96]); cmdFxRaw(112,fxValues[112]); cmdFxRaw(74,effect);
+  }else{
+    fxValues[paramId]=0; cmdFxRaw(paramId,0);
+    if(Number(fxValues[74])===effect){
+      fxValues[64]=0; fxValues[74]=0;
+      cmdFxRaw(74,0);
+    }
+  }
+  for(const id of [80,96,112]){
+    const el=liveFxControls[id]; if(el){const on=!!fxValues[id];el.textContent=on?'ON':'OFF';el.classList.toggle('toggleOn',on);}
+  }
+  const sel=liveFxControls[74]; if(sel && document.activeElement!==sel) sel.value=String(fxValues[74]||0);
+}
+function requestFxState(){ return serialWrite('!RTAL,G,1\n'); }
+const seqTimer=Object.create(null);
+function cmdSeqStep(step,value){ return serialWrite(`!RTAL,X,${step},${value}\n`); }
+function seqSet(step,value){
+  value=Math.max(0,Math.min(127,Number(value)|0)); seqValues[step]=value; updateSeqStepDom(step);
+  clearTimeout(seqTimer[step]); seqTimer[step]=setTimeout(()=>cmdSeqStep(step,value),15);
+}
+function cmdSeqTable(mode){ seqTableMode=mode?1:0; updateSeqTableDom(); return serialWrite(`!RTAL,Y,${seqTableMode}\n`); }
+function cmdSystem(item,value){ return serialWrite(`!RTAL,Z,${item},${value}\n`); }
+function cmdPerformanceMode(mode){ return serialWrite(`!RTAL,D,${mode?1:0}\n`); }
+function cmdPresetLoad(slot){return serialWrite(`!RTAL,R,${slot}\n`)}
+function cmdPresetRefresh(){return serialWrite('!RTAL,N,1\n')}
+function cmdPresetSave(slot,name){name=String(name||'').replace(/[,\r\n]/g,' ').trim().slice(0,15);if(!name)name='USER '+String(slot).padStart(3,'0');return serialWrite(`!RTAL,W,${slot},${name}\n`)}
+function rawToBpm(raw){ return 40+Math.round((Math.max(0,Math.min(127,Number(raw))) * 200)/127); }
+function bpmToRaw(bpm){ return Math.max(0,Math.min(127,Math.round(((Number(bpm)-40)*127)/200))); }
+
+// IDs are supplied by WELLENBAD's existing parameter enum used by SAFE_A004.
+// These constants are patched below from the firmware source.
+
+function append(a,b){let n=new Uint8Array(a.length+b.length);n.set(a);n.set(b,a.length);return n}
+function u16(v,o){return (v[o]|v[o+1]<<8)>>>0}
+function u32(v,o){return (v[o]|v[o+1]<<8|v[o+2]<<16|v[o+3]<<24)>>>0}
+function i32(v,o){return (v[o]|v[o+1]<<8|v[o+2]<<16|v[o+3]<<24)|0}
+function q16(v){return v/65536.0}
+function q16raw(v){return Math.round(Number(v)*65536)}
+function str(v,o,n){let e=o;while(e<o+n&&v[e])e++;return new TextDecoder().decode(v.slice(o,e))}
+function card(k,v){return `<div class=card><div class=k>${k}</div><div class=v>${v}</div></div>`}
+
+function parse(){
+  while(buf.length>=12){
+    let m=-1;
+    for(let i=0;i<=buf.length-4;i++){
+      if(buf[i]===82&&buf[i+1]===84&&buf[i+2]===65&&buf[i+3]===76){m=i;break}
+    }
+    if(m<0){buf=buf.slice(Math.max(0,buf.length-3));return}
+    if(m>0)buf=buf.slice(m);
+    if(buf.length<12)return;
+
+    const len=buf[6]|(buf[7]<<8);
+    if(len>2048){buf=buf.slice(1);continue}
+    const total=12+len;
+    if(buf.length<total)return;
+
+    const type=buf[5];
+    const seq=(buf[8]|buf[9]<<8|buf[10]<<16|buf[11]<<24)>>>0;
+    const p=buf.slice(12,total);
+    lastValidPacketMs=Date.now();
+
+    if(type===1&&len===1024){lastOledMs=Date.now();draw(p,seq);}
+    else if(type===2){lastTeleMs=Date.now();tele(p);}
+    else if(type===3){lastParamMs=Date.now();lastParamSeq=seq;paramState(p);}
+    else if(type===4){lastHealthMs=Date.now();linkHealth(p,seq);}
+    else if(type===5){lastFxMs=Date.now();fxLastSeq=seq;fxState(p);}
+    else if(type===6){lastSeqMs=Date.now();seqLastSeq=seq;seqState(p);}
+    else if(type===7){lastPresetMs=Date.now();presetState(p);}
+    else if(type===8){lastMultiMs=Date.now();multiState(p);}
+    else if(type===9){multiNameState(p);}
+    else if(type===10){lastSmartMs=Date.now();smartSafeActive=true;smartTele(p);}
+
+    buf=buf.slice(total);
+  }
+}
+
+function draw(b,seq){
+  const im=x.createImageData(128,64);
+  for(let y=0;y<64;y++)for(let xx=0;xx<128;xx++){
+    const on=(b[(y>>3)*128+xx]>>(y&7))&1;
+    const p=(y*128+xx)*4,q=on?238:0;
+    im.data[p]=q;im.data[p+1]=q;im.data[p+2]=q;im.data[p+3]=255;
+  }
+  x.putImageData(im,0,0);
+  // FIX4: The physical WELLENBAD OLED header ends with V0..V7.
+  // Hide only that voice-count field in the browser mirror; the hardware OLED is untouched.
+  x.fillStyle='#000';
+  x.fillRect(116,0,12,9);
+  frames++;
+  stats.textContent=`frame ${seq} · ${frames} valid frames`;
+}
+
+// Telemetry wire layout for current GCC/ESP32 build:
+// strings 0..71; uint32 block 72..127;
+// activeVoices=128, polyLoad=129, cutoff=130,
+// resonance=131, wavePosition=132, chorus=133,
+// drive=134, clockSource=135, bpmX100=136..137.
+const PARAMS=[{"id":1,"label":"Wave Position","group":"OSC"},{"id":2,"label":"Wave Mod","group":"OSC"},{"id":3,"label":"Osc Mix","group":"OSC"},{"id":4,"label":"Osc Detune","group":"OSC"},{"id":5,"label":"Osc B Offset","group":"OSC"},{"id":40,"label":"Sub Level","group":"OSC"},{"id":41,"label":"Noise Level","group":"OSC"},{"id":6,"label":"Cutoff","group":"FILTER"},{"id":7,"label":"Resonance","group":"FILTER"},{"id":8,"label":"Filter Env","group":"FILTER"},{"id":31,"label":"Keytrack","group":"FILTER"},{"id":33,"label":"Drive","group":"FILTER"},{"id":34,"label":"Bitcrush","group":"FILTER"},{"id":9,"label":"Amp Attack","group":"ENV"},{"id":10,"label":"Amp Decay","group":"ENV"},{"id":11,"label":"Amp Sustain","group":"ENV"},{"id":12,"label":"Amp Release","group":"ENV"},{"id":13,"label":"Filter Attack","group":"ENV"},{"id":14,"label":"Filter Decay","group":"ENV"},{"id":15,"label":"Filter Sustain","group":"ENV"},{"id":16,"label":"Filter Release","group":"ENV"},{"id":17,"label":"Wave Env","group":"ENV"},{"id":18,"label":"Wave Attack","group":"ENV"},{"id":19,"label":"Wave Decay","group":"ENV"},{"id":20,"label":"Wave Sustain","group":"ENV"},{"id":21,"label":"Wave Release","group":"ENV"},{"id":22,"label":"LFO Rate","group":"LFO"},{"id":23,"label":"LFO Amount","group":"LFO"},{"id":25,"label":"Wave LFO Rate","group":"LFO"},{"id":26,"label":"Wave LFO Amount","group":"LFO"},{"id":27,"label":"AT Wave","group":"MOD"},{"id":28,"label":"AT Filter","group":"MOD"},{"id":29,"label":"Velocity Amp","group":"MOD"},{"id":30,"label":"Velocity Filter","group":"MOD"},{"id":32,"label":"Pan Spread","group":"MOD"},{"id":37,"label":"Glide","group":"MOD"},{"id":38,"label":"Bend Range","group":"MOD"},{"id":39,"label":"Unison Detune","group":"MOD"},{"id":42,"label":"Synth Chorus","group":"EFX"},{"id":35,"label":"Master Volume","group":"EFX"},{"id":48,"label":"Internal Tempo","group":"ARP","bpm":true},{"id":51,"label":"Seq Steps","group":"SEQ"},{"id":53,"label":"Seq Depth","group":"SEQ"},{"id":54,"label":"Morph Amount","group":"MOD"}];
+const DISCRETE=[{"id":0,"label":"Wavetable","group":"OSC","type":"select","options":[{"v":0,"l":"WT000"},{"v":1,"l":"WT001"},{"v":2,"l":"WT002"},{"v":3,"l":"WT003"},{"v":4,"l":"WT004"},{"v":5,"l":"WT005"},{"v":6,"l":"WT006"},{"v":7,"l":"WT007"},{"v":8,"l":"WT008"},{"v":9,"l":"WT009"},{"v":10,"l":"WT010"},{"v":11,"l":"WT011"},{"v":12,"l":"WT012"},{"v":13,"l":"WT013"},{"v":14,"l":"WT014"},{"v":15,"l":"WT015"},{"v":16,"l":"WT016"},{"v":17,"l":"WT017"},{"v":18,"l":"WT018"},{"v":19,"l":"WT019"},{"v":20,"l":"WT020"},{"v":21,"l":"WT021"},{"v":22,"l":"WT022"},{"v":23,"l":"WT023"},{"v":24,"l":"WT024"},{"v":25,"l":"WT025"},{"v":26,"l":"WT026"},{"v":27,"l":"WT027"},{"v":28,"l":"WT028"},{"v":29,"l":"WT029"},{"v":30,"l":"WT030"},{"v":31,"l":"WT031"},{"v":32,"l":"WT032"},{"v":33,"l":"WT033"},{"v":34,"l":"WT034"},{"v":35,"l":"WT035"},{"v":36,"l":"WT036"},{"v":37,"l":"WT037"},{"v":38,"l":"WT038"},{"v":39,"l":"WT039"},{"v":40,"l":"WT040"},{"v":41,"l":"WT041"},{"v":42,"l":"WT042"},{"v":43,"l":"WT043"},{"v":44,"l":"WT044"},{"v":45,"l":"WT045"},{"v":46,"l":"WT046"},{"v":47,"l":"WT047"},{"v":48,"l":"WT048"},{"v":49,"l":"WT049"},{"v":50,"l":"WT050"},{"v":51,"l":"WT051"},{"v":52,"l":"WT052"},{"v":53,"l":"WT053"},{"v":54,"l":"WT054"},{"v":55,"l":"WT055"},{"v":56,"l":"WT056"},{"v":57,"l":"WT057"},{"v":58,"l":"WT058"},{"v":59,"l":"WT059"},{"v":60,"l":"WT060"},{"v":61,"l":"WT061"},{"v":62,"l":"WT062"},{"v":63,"l":"WT063"},{"v":64,"l":"WT064"},{"v":65,"l":"WT065"},{"v":66,"l":"WT066"},{"v":67,"l":"WT067"},{"v":68,"l":"WT068"},{"v":69,"l":"WT069"},{"v":70,"l":"WT070"},{"v":71,"l":"WT071"},{"v":72,"l":"WT072"},{"v":73,"l":"WT073"},{"v":74,"l":"WT074"},{"v":75,"l":"WT075"},{"v":76,"l":"WT076"},{"v":77,"l":"WT077"},{"v":78,"l":"WT078"},{"v":79,"l":"WT079"},{"v":80,"l":"WT080"},{"v":81,"l":"WT081"},{"v":82,"l":"WT082"},{"v":83,"l":"WT083"},{"v":84,"l":"WT084"},{"v":85,"l":"WT085"},{"v":86,"l":"WT086"},{"v":87,"l":"WT087"},{"v":88,"l":"WT088"},{"v":89,"l":"WT089"},{"v":90,"l":"WT090"},{"v":91,"l":"WT091"},{"v":92,"l":"WT092"},{"v":93,"l":"WT093"},{"v":94,"l":"WT094"},{"v":95,"l":"WT095"},{"v":96,"l":"WT096"},{"v":97,"l":"WT097"},{"v":98,"l":"WT098"},{"v":99,"l":"WT099"},{"v":100,"l":"WT100"},{"v":101,"l":"WT101"},{"v":102,"l":"WT102"},{"v":103,"l":"WT103"},{"v":104,"l":"WT104"},{"v":105,"l":"WT105"},{"v":106,"l":"WT106"},{"v":107,"l":"WT107"},{"v":108,"l":"WT108"},{"v":109,"l":"WT109"},{"v":110,"l":"WT110"},{"v":111,"l":"WT111"},{"v":112,"l":"WT112"},{"v":113,"l":"WT113"},{"v":114,"l":"WT114"},{"v":115,"l":"WT115"},{"v":116,"l":"WT116"},{"v":117,"l":"WT117"},{"v":118,"l":"WT118"},{"v":119,"l":"WT119"},{"v":120,"l":"WT120"},{"v":121,"l":"WT121"},{"v":122,"l":"WT122"},{"v":123,"l":"WT123"},{"v":124,"l":"WT124"},{"v":125,"l":"WT125"},{"v":126,"l":"WT126"}]},{"id":24,"label":"LFO Target","group":"LFO","type":"select","options":[{"v":0,"l":"Wave"},{"v":1,"l":"Pitch"},{"v":2,"l":"Filter"},{"v":3,"l":"Amp"},{"v":4,"l":"Pan"}]},{"id":56,"label":"LFO Shape","group":"LFO","type":"select","options":[{"v":0,"l":"TRI"},{"v":1,"l":"SINE"},{"v":2,"l":"SAW UP"},{"v":3,"l":"SAW DN"},{"v":4,"l":"SQUARE"},{"v":5,"l":"RANDOM"}]},{"id":36,"label":"Play Mode","group":"MOD","type":"select","options":[{"v":0,"l":"POLY"},{"v":1,"l":"MONO"},{"v":2,"l":"UNISON"},{"v":3,"l":"POLY GLIDE"}]},{"id":43,"label":"Arp Mode","group":"ARP","type":"select","options":[{"v":0,"l":"OFF"},{"v":1,"l":"UP"},{"v":2,"l":"DOWN"},{"v":3,"l":"UPDN"},{"v":4,"l":"RAND"}]},{"id":44,"label":"Arp Rate","group":"ARP","type":"select","options":[{"v":0,"l":"1/4"},{"v":1,"l":"1/8"},{"v":2,"l":"1/8T"},{"v":3,"l":"1/16"},{"v":4,"l":"1/16T"},{"v":5,"l":"1/32"}]},{"id":45,"label":"Arp Octaves","group":"ARP","type":"select","options":[{"v":1,"l":"1"},{"v":2,"l":"2"},{"v":3,"l":"3"},{"v":4,"l":"4"}]},{"id":46,"label":"Arp Hold","group":"ARP","type":"toggle","off":0,"on":127},{"id":47,"label":"Clock Source","group":"ARP","type":"select","options":[{"v":0,"l":"INT"},{"v":1,"l":"MIDI"}]},{"id":49,"label":"Seq Mode","group":"SEQ","type":"select","options":[{"v":0,"l":"OFF"},{"v":1,"l":"FORWARD"},{"v":2,"l":"PENDUL"},{"v":3,"l":"RANDOM"}]},{"id":50,"label":"Seq Rate","group":"SEQ","type":"select","options":[{"v":0,"l":"1/4"},{"v":1,"l":"1/8"},{"v":2,"l":"1/8T"},{"v":3,"l":"1/16"},{"v":4,"l":"1/16T"},{"v":5,"l":"1/32"}]},{"id":52,"label":"Seq Target","group":"SEQ","type":"select","options":[{"v":0,"l":"Table"},{"v":1,"l":"WavePos"},{"v":2,"l":"WaveMod"},{"v":3,"l":"OscMix"},{"v":4,"l":"Detune"},{"v":5,"l":"OscBOff"},{"v":6,"l":"Cutoff"},{"v":7,"l":"Reso"},{"v":8,"l":"FiltEnv"},{"v":9,"l":"Attack"},{"v":10,"l":"Decay"},{"v":11,"l":"Sustain"},{"v":12,"l":"Release"},{"v":13,"l":"FAttack"},{"v":14,"l":"FDecay"},{"v":15,"l":"FSustain"},{"v":16,"l":"FRelease"},{"v":17,"l":"WaveEnv"},{"v":18,"l":"WAttack"},{"v":19,"l":"WDecay"},{"v":20,"l":"WSustain"},{"v":21,"l":"WRelease"},{"v":22,"l":"LfoRate"},{"v":23,"l":"LfoAmt"},{"v":24,"l":"LfoTgt"},{"v":25,"l":"WLfoRate"},{"v":26,"l":"WLfoAmt"},{"v":27,"l":"ATWave"},{"v":28,"l":"ATFilt"},{"v":29,"l":"VelAmp"},{"v":30,"l":"VelFilt"},{"v":31,"l":"KeyTrk"},{"v":32,"l":"PanSprd"},{"v":33,"l":"Drive"},{"v":34,"l":"Bitcr"},{"v":35,"l":"Volume"},{"v":36,"l":"Play"},{"v":37,"l":"Glide"},{"v":38,"l":"Bend"},{"v":39,"l":"UniDet"},{"v":40,"l":"Sub"},{"v":41,"l":"Noise"},{"v":42,"l":"Chorus"},{"v":43,"l":"ArpMode"},{"v":44,"l":"ArpRate"},{"v":45,"l":"ArpOct"},{"v":46,"l":"ArpHold"},{"v":47,"l":"Clock"},{"v":48,"l":"Tempo"},{"v":54,"l":"Morph"}]},{"id":55,"label":"Randomize","group":"SEQ","type":"action"}];
+const FX_DIVS=["1/1","1/2","1/4","1/8","1/16","1/32","1/4D","1/8D","1/16D","1/4T","1/8T","1/16T"];
+const FX_GROUPS=["DELAY","MOD FX","CHORUS","FLANGER","PHASER","REVERB","WIDTH"];
+const FX_PARAMS=[
+{id:1,label:"Enable",section:"DELAY",kind:"toggle",raw:"int"},{id:2,label:"Freeze",section:"DELAY",kind:"toggle",raw:"int"},
+{id:3,label:"Left Time",section:"DELAY",kind:"range",raw:"q16",min:1,max:1000,step:10,unit:" ms"},{id:4,label:"Right Time",section:"DELAY",kind:"range",raw:"q16",min:1,max:1000,step:10,unit:" ms"},
+{id:5,label:"Feedback",section:"DELAY",kind:"range",raw:"q16",min:0,max:.92,step:.01,unit:""},{id:6,label:"Level",section:"DELAY",kind:"range",raw:"q16",min:0,max:1,step:.01,unit:""},
+{id:7,label:"Lowpass",section:"DELAY",kind:"range",raw:"q16",min:250,max:18000,step:250,unit:" Hz"},{id:8,label:"Highpass",section:"DELAY",kind:"range",raw:"q16",min:20,max:4000,step:50,unit:" Hz"},
+{id:9,label:"Saturation",section:"DELAY",kind:"range",raw:"q16",min:0,max:1,step:.01},{id:10,label:"Crossfeed",section:"DELAY",kind:"range",raw:"q16",min:0,max:1,step:.01},
+{id:11,label:"Duck Amount",section:"DELAY",kind:"range",raw:"q16",min:0,max:1,step:.01},{id:12,label:"Duck Threshold",section:"DELAY",kind:"range",raw:"q16",min:-60,max:0,step:1,unit:" dB"},
+{id:13,label:"Duck Release",section:"DELAY",kind:"range",raw:"q16",min:50,max:2000,step:25,unit:" ms"},{id:14,label:"Clock Mode",section:"DELAY",kind:"select",raw:"int",options:[[0,"FREE"],[1,"SYNC"]]},
+{id:15,label:"Left Division",section:"DELAY",kind:"select",raw:"int",options:FX_DIVS.map((l,v)=>[v,l])},{id:16,label:"Right Division",section:"DELAY",kind:"select",raw:"int",options:FX_DIVS.map((l,v)=>[v,l])},
+{id:64,label:"Engine State",section:"MOD FX",kind:"hidden",raw:"int"},{id:65,label:"LFO Shape",section:"MOD FX",kind:"select",raw:"int",options:[[0,"SINE"],[1,"TRIANGLE"]]},
+{id:66,label:"Rate",section:"MOD FX",kind:"range",raw:"q16",min:.02,max:10,step:.01,unit:" Hz"},{id:67,label:"Sync",section:"MOD FX",kind:"toggle",raw:"int"},
+{id:68,label:"Division",section:"MOD FX",kind:"select",raw:"int",options:FX_DIVS.map((l,v)=>[v,l])},{id:69,label:"Depth",section:"MOD FX",kind:"range",raw:"q16",min:0,max:1,step:.01},
+{id:70,label:"Stereo Phase",section:"MOD FX",kind:"range",raw:"q16",min:0,max:180,step:5,unit:"°"},{id:71,label:"Smoothing",section:"MOD FX",kind:"range",raw:"q16",min:5,max:500,step:5,unit:" ms"},
+{id:72,label:"LFO Left",section:"MOD FX",kind:"read",raw:"q16"},{id:73,label:"LFO Right",section:"MOD FX",kind:"read",raw:"q16"},{id:74,label:"Effect Select",section:"MOD FX",kind:"select",raw:"int",options:[[0,"OFF"],[1,"CHORUS"],[2,"FLANGER"],[3,"PHASER"]]},
+{id:80,label:"Enable",section:"CHORUS",kind:"toggle",raw:"int"},{id:81,label:"Mix",section:"CHORUS",kind:"range",raw:"q16",min:0,max:1,step:.01},
+{id:82,label:"Delay",section:"CHORUS",kind:"range",raw:"q16",min:8,max:24,step:.5,unit:" ms"},{id:83,label:"Tone",section:"CHORUS",kind:"range",raw:"q16",min:2000,max:18000,step:500,unit:" Hz"},
+{id:96,label:"Enable",section:"FLANGER",kind:"toggle",raw:"int"},{id:97,label:"Mix",section:"FLANGER",kind:"range",raw:"q16",min:0,max:1,step:.01},
+{id:98,label:"Delay",section:"FLANGER",kind:"range",raw:"q16",min:.2,max:12,step:.1,unit:" ms"},{id:99,label:"Feedback",section:"FLANGER",kind:"range",raw:"q16",min:-.95,max:.95,step:.01},
+{id:100,label:"HPF",section:"FLANGER",kind:"range",raw:"q16",min:20,max:2000,step:20,unit:" Hz"},{id:101,label:"Saturation",section:"FLANGER",kind:"range",raw:"q16",min:0,max:1,step:.01},
+{id:112,label:"Enable",section:"PHASER",kind:"toggle",raw:"int"},{id:113,label:"Mix",section:"PHASER",kind:"range",raw:"q16",min:0,max:1,step:.01},
+{id:114,label:"Stages",section:"PHASER",kind:"select",raw:"int",options:[[2,"2"],[4,"4"]]},{id:115,label:"Feedback",section:"PHASER",kind:"range",raw:"q16",min:-.95,max:.95,step:.01},
+{id:116,label:"HPF",section:"PHASER",kind:"range",raw:"q16",min:20,max:2000,step:20,unit:" Hz"},{id:117,label:"Saturation",section:"PHASER",kind:"range",raw:"q16",min:0,max:1,step:.01},
+{id:118,label:"Center",section:"PHASER",kind:"range",raw:"q16",min:200,max:4000,step:50,unit:" Hz"},
+{id:122,label:"Enable",section:"REVERB",kind:"toggle",raw:"int"},{id:123,label:"Mix",section:"REVERB",kind:"range",raw:"q16",min:0,max:1,step:.01},
+{id:124,label:"Size",section:"REVERB",kind:"range",raw:"q16",min:0,max:1,step:.01},{id:125,label:"Decay",section:"REVERB",kind:"range",raw:"q16",min:0,max:1,step:.01},
+{id:126,label:"Damping",section:"REVERB",kind:"range",raw:"q16",min:1200,max:16000,step:200,unit:" Hz"},{id:127,label:"Predelay",section:"REVERB",kind:"range",raw:"q16",min:0,max:200,step:2,unit:" ms"},
+{id:120,label:"Enable",section:"WIDTH",kind:"toggle",raw:"int"},{id:121,label:"Width",section:"WIDTH",kind:"range",raw:"q16",min:0,max:2,step:.05,unit:" ×"}
+];
+const fxValues={};
+let activeFxGroup="DELAY",liveFxControls={};
+
+const GROUPS=[...new Set(PARAMS.map(p=>p.group).concat(DISCRETE.map(p=>p.group))), 'SYSTEM','PRESET','MULTI'];
+
+let activeGroup=GROUPS[0];
+
+// A012: editor schema + live coverage audit. This intentionally uses independent
+// ID sets so future parameter additions, duplicates or missing UI definitions
+// become visible immediately instead of silently aliasing another control.
+const SYNTH_EXPECTED=Array.from({length:57},(_,i)=>i);
+const FX_EXPECTED=[...new Set(FX_PARAMS.map(p=>Number(p.id)))];
+const SYSTEM_EXPECTED=['MIDI_CH','CC_MODE','CC_BANK','CLOCK_SOURCE','TEMPO'];
+const synthSeen=new Set(), fxSeen=new Set(), seqSeen=new Set(), systemSeen=new Set();
+let firmwareString='';
+
+function definitionIds(){return PARAMS.map(p=>Number(p.id)).concat(DISCRETE.map(p=>Number(p.id)));}
+function duplicateIds(a){const n={};for(const x of a)n[x]=(n[x]||0)+1;return Object.keys(n).filter(k=>n[k]>1).map(Number);}
+function missingIds(expected,actual){const s=new Set(actual);return expected.filter(x=>!s.has(x));}
+function extraIds(expected,actual){const s=new Set(expected);return [...new Set(actual)].filter(x=>!s.has(x));}
+function covSet(el,text,klass){if(!el)return;el.textContent=text;el.className='cov '+klass;}
+function updateCoverage(){
+  const defs=definitionIds();
+  const synthMissing=missingIds(SYNTH_EXPECTED,defs), synthExtra=extraIds(SYNTH_EXPECTED,defs), synthDup=duplicateIds(defs);
+  const fxDefs=FX_PARAMS.map(p=>Number(p.id)), fxDup=duplicateIds(fxDefs);
+  const schemaOk=!synthMissing.length&&!synthExtra.length&&!synthDup.length&&FX_EXPECTED.length===52&&!fxDup.length;
+  covSet(document.getElementById('covSynth'),`SYNTH ${synthSeen.size}/57`,synthSeen.size===57?'ok':(synthSeen.size?'warn':'bad'));
+  covSet(document.getElementById('covFx'),`FX ${fxSeen.size}/52`,fxSeen.size===52?'ok':(fxSeen.size?'warn':'bad'));
+  covSet(document.getElementById('covSeq'),`SEQ ${seqSeen.size}/16`,seqSeen.size===16?'ok':(seqSeen.size?'warn':'bad'));
+  covSet(document.getElementById('covSystem'),`SYSTEM ${systemSeen.size}/5`,systemSeen.size===5?'ok':(systemSeen.size?'warn':'bad'));
+  const fwOk=!firmwareString||firmwareString.includes('B0072');
+  covSet(document.getElementById('covSchema'),schemaOk&&fwOk?'SCHEMA OK':(schemaOk?'FW MISMATCH':'SCHEMA ERROR'),schemaOk&&fwOk?'ok':'bad');
+  let d=[];
+  if(synthMissing.length)d.push('missing synth IDs: '+synthMissing.join(','));
+  if(synthExtra.length)d.push('unexpected synth IDs: '+synthExtra.join(','));
+  if(synthDup.length)d.push('duplicate synth IDs: '+synthDup.join(','));
+  if(fxDup.length)d.push('duplicate FX IDs: '+fxDup.join(','));
+  if(FX_EXPECTED.length!==52)d.push(`FX definition count ${FX_EXPECTED.length}/52`);
+  if(firmwareString&&!fwOk)d.push('Editor expects B0072, device reports '+firmwareString);
+  if(!d.length)d.push('Definitions: SYNTH 57/57 unique · FX 52/52 unique · SEQ 16 steps · SYSTEM 5 controls. Live counters show which channels have actually been received.');
+  const e=document.getElementById('coverageDetail');if(e)e.textContent=d.join(' · ');
+}
+
+
+// Authoritative browser-side cache. Telemetry updates this cache first.
+// Only controls currently present in the DOM are then refreshed.
+const paramValues={};
+let liveControls={};
+
+function refreshMainTabs(){
+  tabs.querySelectorAll('button').forEach(b=>b.classList.toggle('tabActive',b.dataset.g===activeGroup));
+}
+function buildEditor(){
+  tabs.innerHTML=GROUPS.map(g=>`<button data-g="${g}" style="margin:3px" class="${g===activeGroup?'tabActive':''}">${g}</button>`).join('');
+  tabs.querySelectorAll('button').forEach(b=>b.onclick=()=>{activeGroup=b.dataset.g;refreshMainTabs();buildSliders()});
+  refreshMainTabs();
+  buildSliders();
+}
+
+function buildSliders(){
+  liveControls={};
+  if(activeGroup==='EFX'){ buildFxEditor(); return; }
+  if(activeGroup==='SEQ'){ buildSeqEditor(); return; }
+  if(activeGroup==='SYSTEM'){ buildSystemEditor(); return; }
+  if(activeGroup==='PRESET'){ buildPresetEditor(); return; }
+  if(activeGroup==='MULTI'){ buildMultiEditor(); return; }
+
+  const continuous=PARAMS.filter(p=>p.group===activeGroup);
+  const discrete=DISCRETE.filter(p=>p.group===activeGroup);
+
+  let html='';
+  if(activeGroup==='ARP' && multiActive){
+    html+=`<div class="multiWarning" style="border-color:#666;background:#181818;color:#eee"><b>EDITING MULTI PART ${multiSelectedPart+1}</b><br><span class="small">ARP Mode, Rate, Octaves and Hold are written to Part ${multiSelectedPart+1}. Clock Source and Internal Tempo remain global.</span></div>`;
+  }
+
+  if(discrete.length){
+    html+='<div class="sectionTitle">Modes / Switches</div><div class="grid">';
+    for(const p of discrete){
+      const current=(paramValues[p.id]===undefined)?0:paramValues[p.id];
+
+      if(p.type==='select'){
+        const opts=p.options.map(o=>`<option value="${o.v}" ${Number(current)===Number(o.v)?'selected':''}>${o.l}</option>`).join('');
+        html+=`<div class="card"><div class="k">${p.label}</div><select data-kind="select" data-id="${p.id}">${opts}</select><div class="v" id="pv${p.id}"></div></div>`;
+      }else if(p.type==='toggle'){
+        const on=current>=64;
+        html+=`<div class="card"><div class="k">${p.label}</div><button data-kind="toggle" data-id="${p.id}" class="${on?'toggleOn':''}" style="width:100%">${on?'ON':'OFF'}</button>${p.id===46?'':`<div class="v" id="pv${p.id}">${on?'ON':'OFF'}</div>`}</div>`;
+      }else if(p.type==='action'){
+        html+=`<div class="card"><div class="k">${p.label}</div><button data-kind="action" data-id="${p.id}" style="width:100%">TRIGGER</button><div class="small">Momentary action</div></div>`;
+      }
+    }
+    html+='</div>';
+  }
+
+  if(continuous.length){
+    html+='<div class="sectionTitle">Continuous Parameters</div><div class="grid">';
+    html+=continuous.map(p=>{
+      const current=(paramValues[p.id]===undefined)?0:paramValues[p.id];
+      if(p.bpm){ const bpm=rawToBpm(current); const disabled=Number(paramValues[47]||0)!==0; return `<div class="card"><div class="k">${p.label}</div><input data-kind="range" data-bpm="1" data-id="${p.id}" type="range" min="40" max="240" value="${bpm}" ${disabled?'disabled':''} style="width:100%"><div class="v" id="pv${p.id}">${bpm} BPM</div><div class="small">${disabled?'MIDI clock active · internal tempo retained':'Internal master tempo'}</div></div>`; }
+      return `<div class="card"><div class="k">${p.label}</div><input data-kind="range" data-id="${p.id}" type="range" min="0" max="127" value="${current}" style="width:100%"><div class="v" id="pv${p.id}">${current}</div></div>`;
+    }).join('');
+    html+='</div>';
+  }
+
+  editor.innerHTML=html || '<div class="small">No controls in this group.</div>';
+
+  editor.querySelectorAll('[data-id]').forEach(el=>{
+    const id=Number(el.dataset.id);
+    liveControls[id]=el;
+
+    if(el.dataset.kind==='range'){
+      el.oninput=()=>{
+        if(el.dataset.bpm==='1'){
+          const bpm=Number(el.value)|0, value=bpmToRaw(bpm);
+          paramValues[id]=value;
+          const pv=document.getElementById('pv'+id);
+          if(pv)pv.textContent=bpm+' BPM';
+          paramSet(id,value);
+        }else{
+          const value=Number(el.value)|0;
+          paramValues[id]=value;
+          const pv=document.getElementById('pv'+id);
+          if(pv)pv.textContent=value;
+          paramSet(id,value);
+        }
+      };
+    }else if(el.dataset.kind==='select'){
+      el.onchange=()=>{
+        const value=Number(el.value)|0;
+        paramValues[id]=value;
+        paramSet(id,value);
+      };
+    }else if(el.dataset.kind==='toggle'){
+      el.onclick=()=>{
+        const value=(paramValues[id]||0)>=64?0:127;
+        paramValues[id]=value;
+        paramSet(id,value);
+        el.textContent=value?'ON':'OFF';
+        el.classList.toggle('toggleOn',value>=64);
+        const pv=document.getElementById('pv'+id);
+        if(pv)pv.textContent=value?'ON':'OFF';
+      };
+    }else if(el.dataset.kind==='action'){
+      el.onclick=async()=>{
+        // Rising-edge pulse. ControlTask sees 127 then 0 as two explicit commands.
+        await cmdParam(id,127);
+        setTimeout(()=>cmdParam(id,0),80);
+      };
+    }
+  });
+}
+
+
+function buildSystemEditor(){
+  liveControls={};
+  const clock=Number(paramValues[47]||0)?1:0;
+  const tempoRaw=Number(paramValues[48]===undefined?51:paramValues[48]);
+  const tempoBpm=rawToBpm(tempoRaw);
+  const liveBpm=(teleBpmX100/100).toFixed(1);
+  editor.innerHTML=`<div class="sectionTitle">MIDI / CLOCK SYSTEM</div><div class="grid">
+    <div class="card"><div class="k">MIDI Channel</div><select id="sysMidiChannel">${Array.from({length:16},(_,i)=>`<option value="${i+1}" ${sysMidiChannel===i+1?'selected':''}>CH ${i+1}</option>`).join('')}</select><div class="small">Global F/U receive channel</div></div>
+    <div class="card"><div class="k">CC Mode</div><select id="sysCcMode"><option value="0" ${!sysCcMode?'selected':''}>MOPHO</option><option value="1" ${sysCcMode?'selected':''}>LEARN</option></select><div class="small">Persistent MIDI CC interpretation mode</div></div>
+    <div class="card"><div class="k">CC Bank</div><select id="sysCcBank"><option value="0" ${sysCcBank===0?'selected':''}>BANK 0</option><option value="1" ${sysCcBank===1?'selected':''}>BANK 1</option><option value="2" ${sysCcBank===2?'selected':''}>BANK 2</option></select><div class="small">BANK 2 is the existing action/thru bank</div></div>
+    <div class="card"><div class="k">Clock Source</div><select id="sysClock"><option value="0" ${!clock?'selected':''}>INT</option><option value="1" ${clock?'selected':''}>MIDI</option></select><div class="small">Stored global clock source</div></div>
+    <div class="card"><div class="k">Internal Tempo</div><input id="sysTempo" type="range" min="40" max="240" value="${tempoBpm}" ${clock?'disabled':''} style="width:100%"><div class="v" id="sysTempoValue">${tempoBpm} BPM</div><div class="small">${clock?'Disabled while MIDI clock is selected':'40…240 BPM'}</div></div>
+    <div class="card"><div class="k">Live Clock</div><div class="v" id="sysLiveClock">${clock?'MIDI':'INT'} · ${liveBpm} BPM</div><div class="small" id="sysClockDiag">ticks ${teleClockTicks} · jitter max ${teleClockJitter} µs</div></div>
+  </div>`;
+  document.getElementById('sysMidiChannel').onchange=e=>{sysMidiChannel=Number(e.target.value)|0;cmdSystem(0,sysMidiChannel)};
+  document.getElementById('sysCcMode').onchange=e=>{sysCcMode=Number(e.target.value)?1:0;cmdSystem(1,sysCcMode)};
+  document.getElementById('sysCcBank').onchange=e=>{sysCcBank=Math.max(0,Math.min(2,Number(e.target.value)|0));cmdSystem(2,sysCcBank)};
+  document.getElementById('sysClock').onchange=e=>{const v=Number(e.target.value)?1:0;paramValues[47]=v;cmdParam(47,v);setTimeout(()=>buildSystemEditor(),80)};
+  const t=document.getElementById('sysTempo'); t.oninput=e=>{const bpm=Number(e.target.value)|0;document.getElementById('sysTempoValue').textContent=bpm+' BPM';paramValues[48]=bpmToRaw(bpm);paramSet(48,paramValues[48])};
+}
+function refreshSystemDom(){
+  if(activeGroup!=='SYSTEM') return;
+  const ch=document.getElementById('sysMidiChannel'), cm=document.getElementById('sysCcMode'), cb=document.getElementById('sysCcBank'), cs=document.getElementById('sysClock'), st=document.getElementById('sysTempo'), sv=document.getElementById('sysTempoValue'), lc=document.getElementById('sysLiveClock'), cd=document.getElementById('sysClockDiag');
+  const clock=Number(paramValues[47]||0)?1:0, tempo=rawToBpm(Number(paramValues[48]===undefined?51:paramValues[48]));
+  if(ch && document.activeElement!==ch) ch.value=String(sysMidiChannel);
+  if(cm && document.activeElement!==cm) cm.value=String(sysCcMode);
+  if(cb && document.activeElement!==cb) cb.value=String(sysCcBank);
+  if(cs && document.activeElement!==cs) cs.value=String(clock);
+  if(st && document.activeElement!==st) st.value=tempo;
+  if(st) st.disabled=!!clock;
+  if(sv && document.activeElement!==st) sv.textContent=tempo+' BPM';
+  if(lc) lc.textContent=(clock?'MIDI':'INT')+' · '+(teleBpmX100/100).toFixed(1)+' BPM';
+  if(cd) cd.textContent=`ticks ${teleClockTicks} · jitter max ${teleClockJitter} µs`;
+}
+
+function buildSeqEditor(){
+  liveControls={};
+  const continuous=PARAMS.filter(p=>p.group==='SEQ');
+  const discrete=DISCRETE.filter(p=>p.group==='SEQ');
+  let html='';
+  if(multiActive){
+    html+=`<div class="multiWarning" style="border-color:#666;background:#181818;color:#eee"><b>EDITING MULTI PART ${multiSelectedPart+1}</b><br><span class="small">SEQ Mode, Rate, Steps, Target, Depth, Table Mode and all 16 step values belong to Part ${multiSelectedPart+1}.</span></div>`;
+  }
+  html+='<div class="sectionTitle">SEQUENCER CONTROL</div><div class="grid">';
+  for(const p of discrete){
+    const val=(paramValues[p.id]===undefined)?0:paramValues[p.id];
+    if(p.type==='select') html+=`<div class="card"><div class="k">${p.label}</div><select data-kind="select" data-id="${p.id}">${p.options.map(o=>`<option value="${o.v}" ${Number(val)===Number(o.v)?'selected':''}>${o.l}</option>`).join('')}</select></div>`;
+    else if(p.type==='action') html+=`<div class="card"><div class="k">${p.label}</div><button data-kind="action" data-id="${p.id}" style="width:100%">TRIGGER</button><div class="small">Momentary action</div></div>`;
+  }
+  for(const p of continuous){
+    const val=(paramValues[p.id]===undefined)?0:paramValues[p.id];
+    html+=`<div class="card"><div class="k">${p.label}</div><input data-kind="range" data-id="${p.id}" type="range" min="0" max="127" value="${val}" style="width:100%"><div class="v" id="pv${p.id}">${val}</div></div>`;
+  }
+  html+='</div>';
+  html+=`<div class="seqWrap"><div class="sectionTitle">GRAPHICAL 16-STEP EDITOR</div><div class="seqToolbar"><button id="seqTableBtn" style="min-width:150px"></button><span class="small" id="seqPartLabel"></span><span class="small" id="seqCursorLabel"></span></div><div id="seqTableHint" class="small"></div><div id="seqGraph" class="seqGraph"></div><div class="seqLegend">Drag a bar vertically to set 0…127. Steps beyond SEQ STEPS are retained but dimmed. The framed bar is the currently executed runtime step.</div></div>`;
+  editor.innerHTML=html;
+  editor.querySelectorAll('[data-id]').forEach(el=>{
+    const id=Number(el.dataset.id); liveControls[id]=el;
+    if(el.dataset.kind==='range') el.oninput=()=>{const value=Number(el.value)|0;paramValues[id]=value;const pv=document.getElementById('pv'+id);if(pv)pv.textContent=value;paramSet(id,value); if(id===51)refreshSeqGraph();};
+    else if(el.dataset.kind==='select') el.onchange=()=>{const value=Number(el.value)|0;paramValues[id]=value;paramSet(id,value); if(id===49||id===52)refreshSeqGraph();};
+    else if(el.dataset.kind==='action') el.onclick=async()=>{await cmdParam(id,127);setTimeout(()=>cmdParam(id,0),80)};
+  });
+  const tb=document.getElementById('seqTableBtn'); if(tb)tb.onclick=()=>cmdSeqTable(seqTableMode?0:1);
+  buildSeqGraph(); updateSeqTableDom(); refreshSeqGraph();
+}
+function buildSeqGraph(){
+  const host=document.getElementById('seqGraph'); if(!host)return;
+  host.innerHTML=Array.from({length:16},(_,i)=>`<div class="seqStep" id="seqStep${i}"><div class="seqBarTrack" data-step="${i}"><div class="seqBarFill" id="seqFill${i}"></div></div><div class="seqValue" id="seqVal${i}">0</div><div class="seqNum">${i+1}</div></div>`).join('');
+  host.querySelectorAll('.seqBarTrack').forEach(track=>{
+    const i=Number(track.dataset.step);
+    const setFromEvent=e=>{const r=track.getBoundingClientRect();const y=Math.max(0,Math.min(r.height,e.clientY-r.top));seqSet(i,Math.round((1-y/r.height)*127));};
+    track.onpointerdown=e=>{seqDragging=i;track.setPointerCapture(e.pointerId);setFromEvent(e)};
+    track.onpointermove=e=>{if(seqDragging===i)setFromEvent(e)};
+    track.onpointerup=track.onpointercancel=e=>{if(seqDragging===i)seqDragging=-1};
+  });
+  for(let i=0;i<16;i++)updateSeqStepDom(i);
+}
+function updateSeqStepDom(i){
+  const fill=document.getElementById('seqFill'+i), val=document.getElementById('seqVal'+i); if(fill)fill.style.height=((seqValues[i]/127)*100)+'%'; if(val)val.textContent=seqValues[i];
+}
+function updateSeqTableDom(){
+  const b=document.getElementById('seqTableBtn'); if(b){b.textContent='TABLE MODE: '+(seqTableMode?'REL':'ABS');b.classList.toggle('toggleOn',!!seqTableMode)}
+  const target=Number(paramValues[52]||0); const hint=document.getElementById('seqTableHint'); if(hint){hint.textContent=target===0?(seqTableMode?'REL: each step is an offset from the base wavetable.':'ABS: each step is the direct wavetable slot number.'):'Table Mode is stored and becomes active when SEQ TARGET = Table.';hint.classList.toggle('seqTableDisabled',target!==0)}
+}
+function refreshSeqGraph(){
+  const steps=Math.max(1,Math.min(16,Number(paramValues[51]||16))); const mode=Number(paramValues[49]||0);
+  for(let i=0;i<16;i++){const el=document.getElementById('seqStep'+i);if(!el)continue;el.classList.toggle('inactive',i>=steps);el.classList.toggle('playing',mode!==0&&i<steps&&i===seqCurrentStep)}
+  const cp=document.getElementById('seqCursorLabel'); if(cp)cp.textContent=mode?`PLAY STEP ${Math.min(seqCurrentStep+1,steps)} / ${steps}`:`SEQUENCER OFF · ${steps} STEPS`;
+  const pl=document.getElementById('seqPartLabel'); if(pl)pl.textContent=`RUNTIME PART ${seqRuntimePart+1}`;
+  updateSeqTableDom();
+}
+function seqState(v){
+  if(v.length>=19){for(let i=0;i<16;i++)seqSeen.add(i);updateCoverage();}
+  if(v.length<19)return; seqTableMode=v[0]?1:0; seqCurrentStep=Math.min(15,v[1]); seqRuntimePart=Math.min(3,v[2]); for(let i=0;i<16;i++){seqValues[i]=v[3+i];updateSeqStepDom(i)} refreshSeqGraph(); updateHealth();
+}
+
+function fmtFx(p,raw){
+  if(raw===undefined) return '—';
+  const v=p.raw==='q16'?q16(raw):raw;
+  if(p.kind==='toggle') return v?'ON':'OFF';
+  if(p.kind==='select') { const o=(p.options||[]).find(x=>Number(x[0])===Number(v)); return o?o[1]:String(v); }
+  let text;
+  if(Math.abs(v)<10 && p.step && p.step<1) text=Number(v).toFixed(p.step<.1?2:1);
+  else text=String(Math.round(v*100)/100);
+  return text+(p.unit||'');
+}
+function buildPresetEditor(){
+  const oldList=document.getElementById('presetList');
+  if(oldList) presetScrollTop=oldList.scrollTop;
+  presetSelectedSlot=Math.max(0,Math.min(127,presetSelectedSlot));
+  const e=presetEntries[presetSelectedSlot]||{};
+  const isUser=presetSelectedSlot>=30;
+  editor.innerHTML=`<div class="sectionTitle">PRESET MANAGER</div><div class="small">User-Presets speichern Synth + 49 persistente FX-Parameter. Delay Freeze wird bewusst nicht gespeichert.</div>
+  <div class="grid"><div class="card"><div class="k">Current</div><div class="v">${presetCurrentSlot<30?'F':'U'}${String(presetCurrentSlot).padStart(3,'0')}</div><div>${presetCurrentName||'—'}</div></div>
+  <div class="card"><div class="k">Selected</div><div class="v">${presetSelectedSlot<30?'F':'U'}${String(presetSelectedSlot).padStart(3,'0')}</div><div>${e.valid?(e.name||'—'):'EMPTY'}</div></div></div>
+  <div class="presetToolbar"><button id="pLoad">LOAD</button><button id="pRefresh">REFRESH LIST</button><button id="pSave" ${isUser&&presetSdOk?'':'disabled'}>SAVE / OVERWRITE</button></div>
+  <input id="pName" class="presetNameInput" maxlength="15" value="${(isUser?(e.valid?e.name:presetCurrentName):presetCurrentName).replace(/&/g,'&amp;').replace(/"/g,'&quot;')}" ${isUser?'':'disabled'}>
+  <div class="small">F000–F029 are load-only factory/showcase presets. U030–U127 are SD user slots.</div>
+  <div class="presetList" id="presetList">${presetEntries.map((r,i)=>`<div class="presetRow ${i===presetSelectedSlot?'sel':''} ${i===presetCurrentSlot?'current':''}" data-slot="${i}"><b>${i<30?'F':'U'}${String(i).padStart(3,'0')}</b><span>${r.valid?(r.name||'—'):'<EMPTY>'}</span><span>${i<30?'FACTORY':(r.valid?'USER':'EMPTY')}</span></div>`).join('')}</div>`;
+  document.getElementById('pLoad').onclick=()=>cmdPresetLoad(presetSelectedSlot);
+  document.getElementById('pRefresh').onclick=()=>cmdPresetRefresh();
+  document.getElementById('pSave').onclick=()=>{if(presetSelectedSlot<30||!presetSdOk)return;const r=presetEntries[presetSelectedSlot];if(r&&r.valid&&!confirm(`Overwrite U${String(presetSelectedSlot).padStart(3,'0')} ${r.name}?`))return;cmdPresetSave(presetSelectedSlot,document.getElementById('pName').value)};
+  document.querySelectorAll('.presetRow').forEach(row=>row.onclick=()=>{presetSelectedSlot=Number(row.dataset.slot);buildPresetEditor()});
+  const list=document.getElementById('presetList');
+  if(list){
+    if(presetInitialCenterPending){
+      const cur=list.querySelector('.presetRow.current');
+      if(cur) cur.scrollIntoView({block:'nearest'});
+      presetScrollTop=list.scrollTop;
+      presetInitialCenterPending=false;
+    }else{
+      list.scrollTop=presetScrollTop;
+    }
+    list.addEventListener('scroll',()=>{
+      presetScrollTop=list.scrollTop;
+      presetScrollActiveUntil=Date.now()+350;
+    },{passive:true});
+  }
+}
+function presetState(v){
+  if(v.length<35)return;
+  presetCurrentSlot=v[0]&127; const slot=v[1]&127,flags=v[2]; presetSdOk=!!(flags&4);
+  presetCurrentName=str(v,3,16); const name=str(v,19,16);
+  presetEntries[slot]={slot,valid:!!(flags&1),factory:!!(flags&2),name:name};
+  if(!presetInitialized){presetSelectedSlot=presetCurrentSlot;presetInitialized=true;}
+  const now=Date.now();
+  if(activeGroup==='PRESET' && (slot===presetSelectedSlot || slot===presetCurrentSlot || (now-lastPresetRenderMs)>500)){
+    if(now < presetScrollActiveUntil){
+      presetDeferredRender=true;
+    }else{
+      lastPresetRenderMs=now;
+      presetDeferredRender=false;
+      buildPresetEditor();
+    }
+  }
+}
+function buildFxEditor(){
+  liveFxControls={};
+  const local=PARAMS.filter(p=>p.group==='EFX');
+  let html='<div class="sectionTitle">WELLENBAD LOCAL OUTPUT</div><div class="grid">';
+  for(const p of local){
+    const current=(paramValues[p.id]===undefined)?0:paramValues[p.id];
+    html+=`<div class="card"><div class="k">${p.label}</div><input data-kind="range" data-local="1" data-id="${p.id}" type="range" min="0" max="127" value="${current}" style="width:100%"><div class="v" id="pv${p.id}">${current}</div></div>`;
+  }
+  html+='</div><div class="sectionTitle">FX PROCESSOR</div>';
+  html+=`<div id="fxTabs">${FX_GROUPS.map(g=>`<button data-fxg="${g}" style="margin:3px" class="${g===activeFxGroup?'tabActive':''}">${g}</button>`).join('')}</div>`;
+  html+='<div id="fxControls"></div><div class="small">FX values are read back from the second ESP32 through RTALFxLink. MOD LFO Left/Right are read-only diagnostics. The Modulation Engine is automatic: selecting/enabling Chorus, Flanger or Phaser turns it ON; OFF turns it OFF.</div>';
+  editor.innerHTML=html;
+  editor.querySelectorAll('[data-local="1"]').forEach(el=>{
+    const id=Number(el.dataset.id); liveControls[id]=el;
+    el.oninput=()=>{const value=Number(el.value)|0;paramValues[id]=value;const pv=document.getElementById('pv'+id);if(pv)pv.textContent=value;paramSet(id,value)};
+  });
+  fxTabs.querySelectorAll('button').forEach(b=>b.onclick=()=>{activeFxGroup=b.dataset.fxg;refreshFxTabs();buildFxControls()});
+  refreshFxTabs();
+  buildFxControls();
+}
+function refreshFxTabs(){
+  const host=document.getElementById('fxTabs'); if(!host)return;
+  host.querySelectorAll('button').forEach(b=>b.classList.toggle('tabActive',b.dataset.fxg===activeFxGroup));
+}
+function buildFxControls(){
+  const host=document.getElementById('fxControls'); if(!host)return;
+  liveFxControls={};
+  const items=FX_PARAMS.filter(p=>p.section===activeFxGroup && p.kind!=='hidden');
+  let html='<div class="grid" style="margin-top:10px">';
+  for(const p of items){
+    const raw=fxValues[p.id], value=p.raw==='q16'?(raw===undefined?p.min||0:q16(raw)):(raw===undefined?0:raw);
+    if(p.kind==='toggle') html+=`<div class="card"><div class="k">${p.label}</div><button style="width:100%" data-fxid="${p.id}" data-kind="toggle" class="${value?'toggleOn':''}">${value?'ON':'OFF'}</button></div>`;
+    else if(p.kind==='select') html+=`<div class="card"><div class="k">${p.label}</div><select data-fxid="${p.id}" data-kind="select">${p.options.map(o=>`<option value="${o[0]}" ${Number(value)===Number(o[0])?'selected':''}>${o[1]}</option>`).join('')}</select></div>`;
+    else if(p.kind==='read') html+=`<div class="card"><div class="k">${p.label}</div><div class="v" id="fxv${p.id}">${fmtFx(p,raw)}</div></div>`;
+    else html+=`<div class="card"><div class="k">${p.label}</div><input style="width:100%" data-fxid="${p.id}" data-kind="range" type="range" min="${p.min}" max="${p.max}" step="${p.step}" value="${value}"><div class="v" id="fxv${p.id}">${fmtFx(p,raw)}</div></div>`;
+  }
+  html+='</div>'; host.innerHTML=html;
+  host.querySelectorAll('[data-fxid]').forEach(el=>{
+    const id=Number(el.dataset.fxid), p=FX_PARAMS.find(x=>x.id===id); liveFxControls[id]=el;
+    if(el.dataset.kind==='toggle') el.onclick=()=>{const raw=fxValues[id]?0:1;fxValues[id]=raw;el.textContent=raw?'ON':'OFF';el.classList.toggle('toggleOn',!!raw);if(id===80||id===96||id===112)fxExclusiveModSet(id,raw);else fxSet(id,raw)};
+    else if(el.dataset.kind==='select') el.onchange=()=>{const raw=Number(el.value)|0;fxValues[id]=raw;if(id===74){fxValues[64]=raw?1:0;fxValues[80]=raw===1?1:0;fxValues[96]=raw===2?1:0;fxValues[112]=raw===3?1:0;cmdFxRaw(80,fxValues[80]);cmdFxRaw(96,fxValues[96]);cmdFxRaw(112,fxValues[112]);cmdFxRaw(74,raw);}else fxSet(id,raw)};
+    else if(el.dataset.kind==='range') el.oninput=()=>{const val=Number(el.value);const raw=p.raw==='q16'?q16raw(val):(val|0);fxValues[id]=raw;const pv=document.getElementById('fxv'+id);if(pv)pv.textContent=fmtFx(p,raw);fxSet(id,raw)};
+  });
+}
+function fxState(v){
+  if(v.length<2)return;
+  fxLinkConnected=!!v[0];
+  const count=Math.min(v[1],56,Math.floor((v.length-2)/5));
+  let o=2;
+  for(let i=0;i<count;i++,o+=5){ const id=v[o],raw=i32(v,o+1); fxValues[id]=raw; if(FX_EXPECTED.includes(id))fxSeen.add(id); }
+  updateCoverage();
+  for(const p of FX_PARAMS){
+    const el=liveFxControls[p.id]; if(!el)continue; const raw=fxValues[p.id]; if(raw===undefined)continue;
+    const val=p.raw==='q16'?q16(raw):raw;
+    if(p.kind==='toggle'){el.textContent=val?'ON':'OFF';el.classList.toggle('toggleOn',!!val)}
+    else if(p.kind==='select' && document.activeElement!==el) el.value=String(val);
+    else if(p.kind==='range' && document.activeElement!==el){el.value=val;const pv=document.getElementById('fxv'+p.id);if(pv)pv.textContent=fmtFx(p,raw)}
+    else if(p.kind==='read'){const pv=document.getElementById('fxv'+p.id);if(pv)pv.textContent=fmtFx(p,raw)}
+  }
+  updateHealth();
+}
+
+buildEditor();
+updateCoverage();
+
+function multiCmd(part,item,value){ return serialWrite(`!RTAL,M,${part},${item},${value}\n`); }
+function multiPreset(part,slot){ return serialWrite(`!RTAL,J,${part},${slot}\n`); }
+function multiSelect(part){ multiSelectedPart=part; multiCmdSelect(part); refreshMultiDom(); }
+function multiCmdSelect(part){ return serialWrite(`!RTAL,K,${part}\n`); }
+function multiLoadSlot(slot){ slot=Math.max(0,Math.min(127,Number(slot)|0)); return serialWrite(`!RTAL,O,${slot}\n`); }
+function multiQueryName(slot){ slot=Math.max(0,Math.min(127,Number(slot)|0)); multiBrowseSlot=slot; multiBrowsePending=slot; return serialWrite(`!RTAL,I,${slot}\n`); }
+function multiNameState(v){
+  if(v.length<18)return;
+  const slot=v[0], valid=!!(v[1]&1);
+  if(slot!==multiBrowseSlot && slot!==multiBrowsePending)return;
+  multiBrowseSlot=slot; multiBrowsePending=-1; multiBrowseValid=valid; multiBrowseName=valid?str(v,2,16):'';
+  const ni=document.getElementById('multiNameInput');
+  if(ni && document.activeElement!==ni) ni.value=multiBrowseName || `MULTI ${String(slot).padStart(3,'0')}`;
+  const hint=document.getElementById('multiNameHint'); if(hint) hint.textContent=valid?'stored name':'empty / no stored Multi';
+}
+function multiSaveSlot(slot,name){
+  slot=Math.max(0,Math.min(127,Number(slot)|0));
+  name=String(name||'').replace(/[\r\n,]/g,' ').trim().slice(0,15);
+  if(!name) name=`MULTI ${String(slot).padStart(3,'0')}`;
+  if(!confirm(`M${String(slot).padStart(3,'0')} als "${name}" speichern/überschreiben?\n\nGespeichert werden alle 4 Parts, deren eingebettete Synth/ARP/SEQ-Daten, Clock/Tempo und der gemeinsame FX-State.`)) return Promise.resolve(false);
+  multiBrowseSlot=slot; multiBrowseName=name; multiBrowseValid=true;
+  return serialWrite(`!RTAL,V,${slot},${name}\n`).then(ok=>{if(ok)setTimeout(()=>multiQueryName(slot),250);return ok;});
+}
+function signed8(v){ return v>127?v-256:v; }
+function escHtml(t){return String(t??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function presetOptions(selected){
+  let h=''; for(let i=0;i<128;i++){const e=presetEntries[i];const bank=i<30?'F':'U';const nm=e&&e.name?(' '+e.name):'';h+=`<option value="${i}" ${i===selected?'selected':''}>${bank}${String(i).padStart(3,'0')}${escHtml(nm)}</option>`;} return h;
+}
+function buildMultiEditor(){
+  const disabled=!multiActive?'disabled':'';
+  let html=`<div class="sectionTitle">MULTI CORE EDITOR</div>
+  <div class="multiToolbar"><span class="pill ${multiActive?'ok':'warn'}">${multiActive?'MULTI PERFORMANCE ACTIVE':'PROGRAM CONTEXT'}</span><b id="multiNameLabel">M${String(multiCurrentSlot).padStart(3,'0')} ${escHtml(multiName||'')}</b><label>MULTI SLOT <input id="multiSlotInput" type="number" min="0" max="127" value="${multiBrowseSlot}" style="width:72px"></label><label>NAME <input id="multiNameInput" type="text" maxlength="15" value="${escHtml(multiBrowseName||multiName||'')}" style="width:150px"></label><span id="multiNameHint" class="small">${multiBrowseValid?'stored name':'selected slot'}</span><button id="multiLoadBtn">LOAD MULTI</button><button id="multiSaveBtn" ${disabled}>SAVE MULTI</button></div>
+  <div class="small" style="margin-bottom:8px">A014d: SAVE speichert zusätzlich Key Low/High, Root Note und Pan pro Part. Root Note ist der Nullpunkt des Filter-Keytrackings; Pitch wird weiterhin durch MIDI-Note + Transpose bestimmt.</div>`;
+  if(!multiActive) html+=`<div class="multiWarning">Die vier Parts sind momentan nicht der aktive Performance-Kontext. Lade hier ein vorhandenes M000…M127-Setup oder aktiviere Multi am Gerät; erst dann werden Part-Edits freigegeben.</div>`;
+  html+='<div class="multiParts">';
+  for(let p=0;p<4;p++){
+    const m=multiParts[p];
+    html+=`<div class="multiPart ${p===multiSelectedPart?'selected':''}" id="mp${p}" data-part="${p}">
+      <div class="multiPartHeader"><b>PART ${p+1}</b><span class="multiStatus" id="mpstat${p}">${m.voices} voices</span></div>
+      <div class="multiCtrl"><label>Preset</label><select id="mppreset${p}" ${disabled}>${presetOptions(m.preset)}</select></div>
+      <div class="small" id="mpname${p}">${escHtml(m.name)}</div>
+      <div class="multiCtrl"><label>MIDI Channel</label><input id="mpch${p}" type="number" min="1" max="16" value="${m.midi}" ${disabled}></div>
+      <div class="multiCtrl"><label>Volume <span id="mpvolv${p}">${m.volume}</span></label><input id="mpvol${p}" type="range" min="0" max="127" value="${m.volume}" ${disabled}></div>
+      <div class="multiCtrl"><label>Transpose <span id="mptrv${p}">${m.transpose>0?'+':''}${m.transpose}</span></label><input id="mptr${p}" type="range" min="-24" max="24" value="${m.transpose}" ${disabled}></div>
+      <div class="multiCtrl"><label>Pan <span id="mppanv${p}">${m.pan>0?'+':''}${m.pan}</span></label><input id="mppan${p}" type="range" min="-64" max="63" value="${m.pan}" ${disabled}></div>
+      <div class="multiCtrl"><label>Key Low</label><input id="mplow${p}" type="number" min="0" max="127" value="${m.low}" ${disabled}></div>
+      <div class="multiCtrl"><label>Key High</label><input id="mphigh${p}" type="number" min="0" max="127" value="${m.high}" ${disabled}></div>
+      <div class="multiCtrl"><label>Root Note</label><input id="mproot${p}" type="number" min="0" max="127" value="${m.root}" ${disabled}></div>
+      <div class="multiCtrl"><label>Voice Reserve <span id="mprsv${p}">${m.reserve}</span></label><input id="mprs${p}" type="range" min="0" max="6" value="${m.reserve}" ${disabled}></div>
+      <div class="multiCtrl"><label>ARP Gate <span id="mpgatev${p}">${m.gate}%</span></label><input id="mpgate${p}" type="range" min="10" max="100" step="5" value="${m.gate}" ${disabled}></div>
+      <div class="multiButtons"><button id="mpen${p}" ${disabled} class="${m.enabled?'toggleOn':''}">${m.enabled?'ENABLED':'DISABLED'}</button><button id="mpmute${p}" ${disabled} class="${m.mute?'toggleOn':''}">${m.mute?'MUTED':'MUTE'}</button><button id="mpsolo${p}" ${disabled} class="${multiSolo===p?'toggleOn':''}">SOLO</button></div>
+      <div class="multiButtons" style="grid-template-columns:repeat(2,1fr)"><button id="mparp${p}" ${disabled}>ARP EDIT</button><button id="mpseq${p}" ${disabled}>SEQ EDIT</button></div>
+    </div>`;
+  }
+  html+='</div><div class="multiKeyboardPlaceholder" id="multiZones"></div>';
+  editor.innerHTML=html;
+  const msi=document.getElementById('multiSlotInput');
+  msi.onchange=()=>multiQueryName(msi.value);
+  msi.oninput=()=>{const slot=Math.max(0,Math.min(127,Number(msi.value)|0));multiBrowseSlot=slot;};
+  document.getElementById('multiLoadBtn').onclick=()=>multiLoadSlot(msi.value);
+  document.getElementById('multiSaveBtn').onclick=()=>multiSaveSlot(document.getElementById('multiSlotInput').value,document.getElementById('multiNameInput').value);
+  for(let p=0;p<4;p++){
+    const card=document.getElementById('mp'+p); card.onclick=e=>{if(!e.target.matches('input,select,button'))multiSelect(p)};
+    const pr=document.getElementById('mppreset'+p); pr.onchange=()=>{multiSelectedPart=p;multiCmdSelect(p);multiPreset(p,Number(pr.value));};
+    const ch=document.getElementById('mpch'+p); ch.onchange=()=>multiCmd(p,0,Math.max(1,Math.min(16,Number(ch.value)|0)));
+    const vol=document.getElementById('mpvol'+p); vol.oninput=()=>{document.getElementById('mpvolv'+p).textContent=vol.value;paramDebounceMulti(p,1,vol.value)};
+    const tr=document.getElementById('mptr'+p); tr.oninput=()=>{document.getElementById('mptrv'+p).textContent=(tr.value>0?'+':'')+tr.value;paramDebounceMulti(p,2,tr.value)};
+    const pn=document.getElementById('mppan'+p); pn.oninput=()=>{document.getElementById('mppanv'+p).textContent=(pn.value>0?'+':'')+pn.value;paramDebounceMulti(p,10,pn.value)};
+    const lo=document.getElementById('mplow'+p); lo.onchange=()=>multiCmd(p,7,Math.max(0,Math.min(127,Number(lo.value)|0)));
+    const hi=document.getElementById('mphigh'+p); hi.onchange=()=>multiCmd(p,8,Math.max(0,Math.min(127,Number(hi.value)|0)));
+    const ro=document.getElementById('mproot'+p); ro.onchange=()=>multiCmd(p,9,Math.max(0,Math.min(127,Number(ro.value)|0)));
+    const rs=document.getElementById('mprs'+p); rs.oninput=()=>{document.getElementById('mprsv'+p).textContent=rs.value;paramDebounceMulti(p,3,rs.value)};
+    const ga=document.getElementById('mpgate'+p); ga.oninput=()=>{document.getElementById('mpgatev'+p).textContent=ga.value+'%';paramDebounceMulti(p,6,ga.value)};
+    document.getElementById('mpen'+p).onclick=()=>multiCmd(p,4,multiParts[p].enabled?0:1);
+    document.getElementById('mpmute'+p).onclick=()=>multiCmd(p,5,multiParts[p].mute?0:1);
+    document.getElementById('mpsolo'+p).onclick=()=>toggleMultiSolo(p);
+    document.getElementById('mparp'+p).onclick=async()=>{multiSelectedPart=p;await multiCmdSelect(p);activeGroup='ARP';refreshMainTabs();buildSliders();};
+    document.getElementById('mpseq'+p).onclick=async()=>{multiSelectedPart=p;await multiCmdSelect(p);activeGroup='SEQ';refreshMainTabs();buildSliders();};
+  }
+  refreshMultiDom();
+  if(multiBrowsePending<0) multiQueryName(multiBrowseSlot);
+}
+const multiTimers={};
+function paramDebounceMulti(part,item,value){const k=part+':'+item;clearTimeout(multiTimers[k]);multiTimers[k]=setTimeout(()=>multiCmd(part,item,Number(value)|0),25);}
+function toggleMultiSolo(p){
+  if(!multiActive)return;
+  if(multiSolo===p){
+    const restore=multiSoloMuteSnapshot||multiParts.map(x=>x.mute); multiSolo=-1; multiSoloMuteSnapshot=null;
+    for(let i=0;i<4;i++)multiCmd(i,5,restore[i]?1:0); multiCmdSelect(p);
+  }else{
+    if(multiSolo<0)multiSoloMuteSnapshot=multiParts.map(x=>x.mute);
+    multiSolo=p; for(let i=0;i<4;i++)multiCmd(i,5,i===p?0:1); multiCmdSelect(p);
+  }
+  refreshMultiDom();
+}
+function setIfIdle(id,val){const e=document.getElementById(id);if(e&&document.activeElement!==e)e.value=val;}
+function refreshPerformanceModeDom(){
+  const s=document.getElementById('modeSingle'),m=document.getElementById('modeMulti'),d=document.getElementById('modeDetail');
+  if(s)s.classList.toggle('tabActive',!multiActive); if(m)m.classList.toggle('tabActive',multiActive);
+  if(d)d.textContent=multiActive?`MULTI · M${String(multiCurrentSlot).padStart(3,'0')} ${multiName||''}`:`SINGLE · ${presetCurrentSlot<30?'F':'U'}${String(presetCurrentSlot).padStart(3,'0')} ${presetCurrentName||''}`;
+}
+function refreshMultiDom(){
+  if(activeGroup!=='MULTI')return;
+  const n=document.getElementById('multiNameLabel');if(n)n.textContent=`M${String(multiCurrentSlot).padStart(3,'0')} ${multiName||''}`;
+  const ni=document.getElementById('multiNameInput');
+  if(ni&&document.activeElement!==ni && multiBrowseSlot===multiCurrentSlot && multiBrowsePending<0){ multiBrowseName=multiName||''; multiBrowseValid=!!multiName; ni.value=multiBrowseName||`MULTI ${String(multiBrowseSlot).padStart(3,'0')}`; }
+  for(let p=0;p<4;p++){
+    const m=multiParts[p],card=document.getElementById('mp'+p);if(!card)continue;
+    card.classList.toggle('selected',p===multiSelectedPart);
+    const st=document.getElementById('mpstat'+p);if(st)st.textContent=`${m.voices} voices`;
+    const nm=document.getElementById('mpname'+p);if(nm)nm.textContent=m.name||'';
+    setIfIdle('mppreset'+p,m.preset);setIfIdle('mpch'+p,m.midi);setIfIdle('mpvol'+p,m.volume);setIfIdle('mptr'+p,m.transpose);setIfIdle('mppan'+p,m.pan);setIfIdle('mplow'+p,m.low);setIfIdle('mphigh'+p,m.high);setIfIdle('mproot'+p,m.root);setIfIdle('mprs'+p,m.reserve);setIfIdle('mpgate'+p,m.gate);
+    const vv=document.getElementById('mpvolv'+p);if(vv)vv.textContent=m.volume;const tv=document.getElementById('mptrv'+p);if(tv)tv.textContent=(m.transpose>0?'+':'')+m.transpose;const pnv=document.getElementById('mppanv'+p);if(pnv)pnv.textContent=(m.pan>0?'+':'')+m.pan;const rv=document.getElementById('mprsv'+p);if(rv)rv.textContent=m.reserve;const gv=document.getElementById('mpgatev'+p);if(gv)gv.textContent=m.gate+'%';
+    const en=document.getElementById('mpen'+p);if(en){en.textContent=m.enabled?'ENABLED':'DISABLED';en.classList.toggle('toggleOn',m.enabled)}
+    const mu=document.getElementById('mpmute'+p);if(mu){mu.textContent=m.mute?'MUTED':'MUTE';mu.classList.toggle('toggleOn',m.mute)}
+    const so=document.getElementById('mpsolo'+p);if(so)so.classList.toggle('toggleOn',multiSolo===p);
+  }
+  const z=document.getElementById('multiZones');
+  if(z){let h='<b>KEY ZONES</b><div style="margin-top:6px">';for(let p=0;p<4;p++){const m=multiParts[p],l=(m.low/127*100),w=((m.high-m.low+1)/128*100),r=(m.root/127*100);h+=`<div style="position:relative;height:24px;margin:5px 0;background:#111;border:1px solid #555"><span style="position:absolute;left:4px;z-index:3;font-size:11px">P${p+1} ${m.low}–${m.high} root ${m.root}</span><span style="position:absolute;left:${l}%;width:${w}%;top:0;bottom:0;background:rgba(255,255,255,.22)"></span><span style="position:absolute;left:${r}%;top:0;bottom:0;border-left:2px solid currentColor"></span></div>`;}h+='<div class="small">0=C-1 · 12=C0 · 24=C1 · 36=C2 · 48=C3 · 60=C4 · 72=C5 · 84=C6 · 96=C7 · 108=C8 · 120=C9</div></div>';z.innerHTML=h;}
+}
+function multiState(v){
+  if(v.length<132)return;
+  const wasActive=multiActive;
+  multiActive=!!(v[0]&1);multiSdOk=!!(v[0]&2);multiCurrentSlot=v[1];multiSelectedPart=Math.min(3,v[2]);multiName=str(v,4,16);
+  if(multiBrowsePending<0 && (multiBrowseSlot===multiCurrentSlot || !multiBrowseName)){multiBrowseSlot=multiCurrentSlot;multiBrowseName=multiName;multiBrowseValid=!!multiName;}
+  for(let p=0;p<4;p++){const o=20+p*28,f=v[o+6];multiParts[p]={preset:v[o],midi:v[o+1],volume:v[o+2],transpose:signed8(v[o+3]),reserve:v[o+4],gate:v[o+5],enabled:!!(f&1),mute:!!(f&2),voices:v[o+7],low:v[o+8],high:v[o+9],root:v[o+10],pan:signed8(v[o+11]),name:str(v,o+12,16)};}
+  refreshPerformanceModeDom(); if(activeGroup==='MULTI' && wasActive!==multiActive) buildMultiEditor(); else refreshMultiDom();
+}
+
+function paramState(v){
+  if(v.length<57)return;
+
+  for(let id=0;id<57;id++){ paramValues[id]=v[id]; synthSeen.add(id); }
+  systemSeen.add('CLOCK_SOURCE'); systemSeen.add('TEMPO');
+  updateCoverage();
+
+  for(const p of PARAMS){
+    const id=p.id, val=v[id];
+    const el=liveControls[id];
+    if(el && document.activeElement!==el && el.dataset.kind==='range'){
+      const shown=p.bpm?rawToBpm(val):val;
+      el.value=shown;
+      if(p.bpm) el.disabled=Number(v[47]||0)!==0;
+      const pv=document.getElementById('pv'+id);
+      if(pv)pv.textContent=p.bpm?(shown+' BPM'):shown;
+    }
+  }
+
+  for(const p of DISCRETE){
+    const id=p.id, val=v[id];
+    const el=liveControls[id];
+    if(!el) continue;
+
+    if(p.type==='select' && document.activeElement!==el){
+      el.value=String(val);
+    }else if(p.type==='toggle'){
+      const on=val>=64;
+      el.textContent=on?'ON':'OFF';
+      el.classList.toggle('toggleOn',on);
+      const pv=document.getElementById('pv'+id);
+      if(pv)pv.textContent=on?'ON':'OFF';
+    }
+  }
+  if(activeGroup==='SEQ') refreshSeqGraph();
+  if(activeGroup==='SYSTEM') refreshSystemDom();
+}
+
+function linkHealth(v,seq){
+  if(v.length<36)return;
+  const flags=v[35];
+  rtSafe=!!(flags&128);
+  linkSession=(v[32]|(v[33]<<8))>>>0;
+  const stalls=u32(v,20), drops=u32(v,24), wmax=u32(v,28);
+  healthDetail.textContent=`${rtSafe?'RT SAFE · ':''}session ${linkSession} · health ${seq} · param packets ${u32(v,12)} · TX stalls ${stalls} · command drops ${drops} · write max ${wmax} µs · device ${flags&1?'CDC':'NO-CDC'}/${flags&2?'OLED':'NO-OLED'}/${flags&4?'PARAM':'NO-PARAM'}/${flags&8?'FXSTATE':'NO-FXSTATE'}/${flags&16?'SEQSTATE':'NO-SEQSTATE'}/${flags&32?'PRESET':'NO-PRESET'}/${flags&64?'MULTI':'NO-MULTI'}`;
+  updateHealth();
+}
+
+function setPill(el,text,state){
+  el.textContent=text;
+  el.className='pill'+(state?' '+state:'');
+}
+
+function updateHealth(){
+  const now=Date.now();
+  const usb=connected;
+  const safeNow=rtSafe||audioQuietInferred||smartSafeActive;
+  const oled=usb&&lastOledMs&&(now-lastOledMs)<1800;
+  const param=usb&&lastParamMs&&(now-lastParamMs)<(safeNow?1600:1200);
+  const telem=usb&&lastTeleMs&&(now-lastTeleMs)<(safeNow?2600:1800);
+  const fxStateLive=usb&&lastFxMs&&(now-lastFxMs)<(safeNow?2200:1800);
+  const fx=fxStateLive&&fxLinkConnected;
+  const seqLive=usb&&lastSeqMs&&(now-lastSeqMs)<(safeNow?1800:1200);
+  const presetLive=usb&&lastPresetMs&&(now-lastPresetMs)<(safeNow?3200:1800);
+  const multiLive=usb&&lastMultiMs&&(now-lastMultiMs)<1800;
+  const synced=usb&&(safeNow||oled)&&(safeNow||(param&&telem&&fxStateLive&&seqLive&&presetLive&&multiLive));
+  setPill(hUsb,usb?'USB CONNECTED':'USB OFF',usb?'ok':'');
+  setPill(hOled,safeNow?'OLED PAUSED · AUDIO SAFE':(oled?'OLED LIVE':'OLED WAIT'),safeNow?'ok':(oled?'ok':(usb?'warn':'')));
+  setPill(hParam,param?'PARAM SYNC':'PARAM WAIT',param?'ok':(usb?'warn':''));
+  setPill(hTele,telem?'TELE LIVE':'TELE WAIT',telem?'ok':(usb?'warn':''));
+  setPill(hFx,fx?'FX LINK LIVE':(fxStateLive?'FX LINK OFFLINE':'FX WAIT'),fx?'ok':(usb?'warn':''));
+  setPill(hSeq,seqLive?'SEQ LIVE':'SEQ WAIT',seqLive?'ok':(usb?'warn':''));
+  setPill(hPreset,presetLive?'PRESET LIVE':'PRESET WAIT',presetLive?'ok':(usb?'warn':''));
+  setPill(hMulti,multiLive?'MULTI LIVE':'MULTI WAIT',multiLive?'ok':(usb?'warn':''));
+  setPill(hSync,synced?(safeNow?'AUDIO SAFE':'FULLY SYNCED'):'NOT SYNCED',synced?'ok':(usb?'warn':''));
+}
+
+function smartTele(v){
+  if(v.length<14)return;
+  const dspLast=u32(v,0), dspMax=u32(v,4), overruns=u32(v,8), voices=v[12], flags=v[13];
+  rtSafe=!!(flags&1);
+  let g='';
+  g+=card('DSP last',dspLast+' µs');
+  g+=card('DSP max',dspMax+' µs');
+  g+=card('Overruns',overruns);
+  g+=card('Remote','SMART SAFE');
+  grid.innerHTML=g;
+  status.textContent=' connected · SMART SAFE · live DSP';
+  updateHealth();
+}
+
+function tele(v){
+  if(v.length<138)return;
+  smartSafeActive=false;
+  firmwareString=str(v,0,24);
+  if(v.length>=141){systemSeen.add('MIDI_CH');systemSeen.add('CC_MODE');systemSeen.add('CC_BANK');}
+  updateCoverage();
+  teleClockSource=v[135]?1:0;
+  teleBpmX100=u16(v,136);
+  teleClockTicks=u32(v,116);
+  teleClockJitter=u32(v,120);
+  if(v.length>=141){ sysMidiChannel=v[138]||1; sysCcMode=v[139]?1:0; sysCcBank=Math.min(2,v[140]||0); }
+  let g='';
+  g+=card('Firmware',str(v,0,24));
+  g+=card('Program',str(v,24,24));
+  g+=card('Wavetable',str(v,48,24));
+  g+=card('Heap',Math.round(u32(v,76)/1024)+' kB');
+  g+=card('PSRAM',Math.round(u32(v,80)/1024)+' kB');
+  g+=card('DSP last',u32(v,88)+' µs');
+  g+=card('DSP max',u32(v,92)+' µs');
+  g+=card('Overruns',u32(v,96));
+  g+=card('I2S short',u32(v,100));
+  g+=card('MIDI drops',u32(v,108));
+  g+=card('Clock', (teleClockSource?'MIDI':'INT')+' · '+(teleBpmX100/100).toFixed(1)+' BPM');
+  g+=card('Clock ticks',teleClockTicks);
+  g+=card('Clock jitter max',teleClockJitter+' µs');
+  g+=card('MIDI channel','CH '+sysMidiChannel);
+  g+=card('CC mode',sysCcMode?'LEARN':'MOPHO');
+  g+=card('CC bank','BANK '+sysCcBank);
+  g+=card('Poly load',v[129]+' %');
+  g+=card('Cutoff',v[130]);
+  g+=card('Resonance',v[131]);
+  g+=card('Wave position',v[132]);
+  grid.innerHTML=g;
+  if(activeGroup==='SYSTEM') refreshSystemDom();
+}
+
+
+async function closeSerial(finalStatus=''){
+  const myToken=++connectionToken;
+  connected=false;
+
+  const r=reader;
+  const w=writer;
+  const p=port;
+
+  reader=null;
+  writer=null;
+  port=null;
+
+  try{ if(r) await r.cancel(); }catch(e){}
+  try{ if(r) r.releaseLock(); }catch(e){}
+  try{ await writeChain; }catch(e){}
+  try{ if(w) w.releaseLock(); }catch(e){}
+  try{ if(p) await p.close(); }catch(e){}
+
+  buf=new Uint8Array(0);
+  lastValidPacketMs=lastOledMs=lastParamMs=lastTeleMs=lastHealthMs=lastFxMs=lastSeqMs=lastPresetMs=lastMultiMs=0;presetInitialized=false;
+  fxLinkConnected=false;
+  linkSession=0; lastParamSeq=0;
+  synthSeen.clear();fxSeen.clear();seqSeen.clear();systemSeen.clear();firmwareString='';updateCoverage();
+  updateHealth();
+  writeChain=Promise.resolve();
+  connect.textContent='Connect WELLENBAD CDC';
+  status.textContent=finalStatus;
+}
+
+async function readLoop(myToken){
+  try{
+    while(connected && reader && myToken===connectionToken){
+      const {value,done}=await reader.read();
+      if(done) break;
+      if(value){
+        buf=append(buf,value);
+        parse();
+      }
+    }
+  }catch(e){
+    if(myToken===connectionToken && connected){
+      status.textContent=' RX error';
+    }
+  }
+
+  if(myToken===connectionToken && connected){
+    await closeSerial(' Verbindung beendet');
+  }
+}
+
+async function openPort(selectedPort){
+  port=selectedPort;
+  await port.open({baudRate:115200});
+
+  writer=port.writable.getWriter();
+  reader=port.readable.getReader();
+  connected=true;
+  lastValidPacketMs=Date.now();
+
+  const myToken=++connectionToken;
+  connect.textContent='Disconnect WELLENBAD CDC';
+  status.textContent=' connected · synchronizing...';
+  updateHealth();
+  // A011: request fresh OLED + parameter + telemetry + sequencer snapshots; telemetry also carries system state.
+  await serialWrite('!RTAL,H,1\n');
+  await cmdPresetRefresh();
+  await requestFxState();
+
+  readLoop(myToken);
+}
+
+async function disconnect(){
+  if(!connected && !port) return;
+  await closeSerial('');
+}
+
+async function connectPort(){
+  if(connected){
+    await disconnect();
+    return;
+  }
+
+  try{
+    const known=await navigator.serial.getPorts();
+    const selected=known.length===1 ? known[0] : await navigator.serial.requestPort();
+    await openPort(selected);
+  }catch(e){
+    await closeSerial(' '+e.message);
+  }
+}
+
+async function recoverSerial(){
+  if(recoveryRunning || !connected || !port) return;
+  recoveryRunning=true;
+
+  const savedPort=port;
+  status.textContent=' Verbindung wird neu synchronisiert...';
+
+  try{
+    await closeSerial(' reconnecting...');
+    await new Promise(r=>setTimeout(r,120));
+    await openPort(savedPort);
+    status.textContent=' reconnected';
+  }catch(e){
+    await closeSerial(' Reconnect fehlgeschlagen');
+  }finally{
+    recoveryRunning=false;
+  }
+}
+
+// A valid telemetry packet arrives at least every 500 ms.
+// If *all* valid packets stop for >2.5 s, the browser-side CDC stream is stale.
+// Re-open the already-authorized port; enableReboot(false) prevents a synth reset.
+setInterval(()=>{
+  const now=Date.now();
+  // B0072 FINAL: During sounding audio the full mirror/state channels are silent. A tiny
+  // Smart Telemetry packet may still arrive once per second when DSP headroom
+  // permits it. Infer AUDIO SAFE only when even Smart Telemetry is suppressed.
+  // Do not auto-reconnect/resync based on intentional packet silence;
+  // navigator.serial disconnect/read errors remain the authoritative failure path.
+  smartSafeActive=!!(connected&&lastSmartMs&&(now-lastSmartMs)<1800);
+  audioQuietInferred=!!(connected&&!smartSafeActive&&lastValidPacketMs&&(now-lastValidPacketMs)>700);
+  if(!audioQuietInferred&&!smartSafeActive&&rtSafe&&(now-lastValidPacketMs)<700) rtSafe=false;
+  updateHealth();
+  if(presetDeferredRender && activeGroup==='PRESET' && now>=presetScrollActiveUntil){
+    presetDeferredRender=false;
+    lastPresetRenderMs=now;
+    buildPresetEditor();
+  }
+  if(connected && smartSafeActive){
+    status.textContent=' connected · SMART SAFE · live DSP';
+  }else if(connected && (rtSafe||audioQuietInferred)){
+    status.textContent=' connected · AUDIO SAFE RX-ONLY';
+  }else if(connected && lastParamMs && (now-lastParamMs)<1200){
+    status.textContent=fxLinkConnected?' connected · FX online':' connected · FX offline';
+  }
+},500);
+
+if(navigator.serial){
+  navigator.serial.addEventListener('disconnect',async e=>{
+    if(port && e.target===port){
+      await closeSerial(' USB getrennt');
+    }
+  });
+}
+
+connect.onclick=connectPort;
+</script>
+<!-- A012 COVERAGE1: static schema audit + live packet coverage; Morph Amount moved from SEQ to MOD. -->
+</body>
+</html>
+
+<!-- A011_FIX2: firmware-side MIDI channel routing fix; UI/protocol unchanged from FIX1. -->
