@@ -674,22 +674,22 @@ No network connection is required for the normal USB editor workflow.
 ## Editor Screenshots
 
 ### Full Editor Overview
-![WELLENBAD Editor Overview](docs/images/editor_overview.jpg)
+![WELLENBAD Editor Overview](images/WELLENBAD_Editor_1.JPG)
 
 ### Wave Monitor
-![WELLENBAD Wave Monitor](docs/images/editor_wave_monitor.jpg)
+![WELLENBAD Wave Monitor](images/WELLENBAD_Wave_Monitor.JPG)
 
 ### Graphical Wave Sequencer
 ![WELLENBAD Graphical Wave Sequencer](images/RTAL_WELLENBAD_SEQUENCER_2.gif)
 
 ### Preset / Multi Management
-![WELLENBAD Preset Multi Management](docs/images/editor_preset_multi.jpg)
+![WELLENBAD Preset Multi Management](images/WELLENBAD_Multi_Management.JPGg)
 
 ### OLED Mirror / Hardware Interaction
-![WELLENBAD OLED Mirror](docs/images/editor_oled_mirror.jpg)
+![WELLENBAD OLED Mirror](images/WELLENBAD_OLED_Mirror.JPG)
 
 ### Diagnostics / Link Health
-![WELLENBAD Diagnostics](docs/images/editor_diagnostics.jpg)
+![WELLENBAD Diagnostics](images/WELLENBAD_Performance.JPG)
 
 ---
 
