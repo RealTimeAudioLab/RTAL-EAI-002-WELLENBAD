@@ -628,15 +628,26 @@ Multi changes use a protected transition so voices are silenced safely during th
 
 ---
 
-# USB-CDC Remote Editor
+# Editor & Remote Control
 
-v1.5 introduces an extensive browser-based Remote Editor using the ESP32-S3 native USB-CDC interface.
+One of the most important additions in WELLENBAD v1.5 is the **USB-CDC PC Editor**.
 
-Official editor:
+The editor transforms WELLENBAD from a hardware-only synth into a far more efficient sound-design and performance platform.  
+It provides direct access to parameters, visualization tools, sequencing functions and system diagnostics — all inside a browser-based interface.
 
-```text
-editor/RTAL_WELLENBAD_Editor_v1.5.0.html
-```
+## Why the Editor Matters
+
+The editor makes WELLENBAD faster and easier to use by providing:
+
+- **faster parameter access**
+- **better visual feedback**
+- **waveform and wavetable activity monitoring**
+- **graphical sequencing workflow**
+- **remote hardware control**
+- **preset and multi management**
+- **live diagnostics and communication status**
+
+## Editor Features
 
 The editor provides remote access to major WELLENBAD functions, including:
 
@@ -657,6 +668,36 @@ The editor provides remote access to major WELLENBAD functions, including:
 - DSP / overrun diagnostics
 
 No network connection is required for the normal USB editor workflow.
+
+---
+
+## Editor Screenshots
+
+### Full Editor Overview
+![WELLENBAD Editor Overview](docs/images/editor_overview.jpg)
+
+### Wave Monitor
+![WELLENBAD Wave Monitor](docs/images/editor_wave_monitor.jpg)
+
+### Graphical Wave Sequencer
+![WELLENBAD Graphical Wave Sequencer](docs/images/editor_wave_sequencer.jpg)
+
+### Preset / Multi Management
+![WELLENBAD Preset Multi Management](docs/images/editor_preset_multi.jpg)
+
+### OLED Mirror / Hardware Interaction
+![WELLENBAD OLED Mirror](docs/images/editor_oled_mirror.jpg)
+
+### Diagnostics / Link Health
+![WELLENBAD Diagnostics](docs/images/editor_diagnostics.jpg)
+
+---
+
+Official editor:
+
+```text
+editor/RTAL_WELLENBAD_Editor_v1.5.0.html
+```
 
 ---
 
