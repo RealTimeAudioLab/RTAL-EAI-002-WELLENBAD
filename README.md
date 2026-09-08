@@ -683,7 +683,7 @@ No network connection is required for the normal USB editor workflow.
 ![WELLENBAD Graphical Wave Sequencer](images/RTAL_WELLENBAD_SEQUENCER_2.gif)
 
 ### Preset / Multi Management
-![WELLENBAD Preset Multi Management](images/WELLENBAD_Multi_Management.JPGg)
+![WELLENBAD Preset Multi Management](images/WELLENBAD_Multi_Management.JPG)
 
 ### OLED Mirror / Hardware Interaction
 ![WELLENBAD OLED Mirror](images/WELLENBAD_OLED_Mirror.JPG)
