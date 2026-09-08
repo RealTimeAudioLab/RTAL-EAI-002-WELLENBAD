@@ -156,8 +156,8 @@ WELLENBAD keeps time-critical synthesis work isolated from user-interface, MIDI,
 ```text
                        ┌──────────────────────────────────┐
 MIDI IN ──────────────►│ MIDI / Control / ARP / SEQ       │
-Buttons / Encoder ────►│ UI / Presets / SD / USB Remote  │
-USB-CDC Editor ───────►│              Core 0             │
+Buttons / Encoder ────►│ UI / Presets / SD / USB Remote   │
+USB-CDC Editor ───────►│              Core 0              │
                        └───────────────┬──────────────────┘
                                        │
                                        ▼
