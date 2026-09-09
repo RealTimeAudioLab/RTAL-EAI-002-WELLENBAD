@@ -1,0 +1,23 @@
+# Companion FX release
+
+The recommended effects companion for this firmware is:
+
+```text
+RTAL AudioDSP FX Module
+v1.0.0 FX0047 FINAL
+```
+
+Audio link:
+- WELLENBAD BCLK GPIO18 -> FX GPIO18
+- WELLENBAD LRCK GPIO16 -> FX GPIO16
+- WELLENBAD DATA GPIO17 -> FX DATA IN GPIO5
+
+Control link:
+- WELLENBAD TX GPIO5 -> FX RX GPIO40
+- WELLENBAD RX GPIO8 <- FX TX GPIO39
+- 115200 baud, 8N1
+
+Final DAC path:
+- FX BCLK GPIO18 -> PCM5102A BCK
+- FX LRCK GPIO16 -> PCM5102A LRCK
+- FX DATA OUT GPIO17 -> PCM5102A DIN
