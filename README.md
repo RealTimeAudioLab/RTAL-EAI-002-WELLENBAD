@@ -1062,7 +1062,7 @@ Current release:
 ```text
 Product : RTAL WELLENBAD
 Version : 1.5.0
-Build   : B0072
+Build   : B0074F
 Series  : A015
 Status  : FINAL
 ```
